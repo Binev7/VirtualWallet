@@ -6,23 +6,24 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import static com.portfolio.virtualwallet.entity.dto.auth.constants.ValidationMessages.*;
+
 @Data
 public class UserRegisterDto {
 
-    @NotBlank(message = "Username cannot be empty")
-    @Size(min = 2, max = 20, message = "Username must be between 2 and 20 symbols.")
+    @NotBlank(message = USERNAME_NOT_BLANK)
+    @Size(min = 2, max = 20, message = USERNAME_SIZE)
     private String username;
 
-    @NotBlank(message = "Password cannot be empty")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[+\\-*&^]).{8,}$",
-            message = "Password must be at least 8 characters and contain a capital letter, a digit, and a special symbol (+, -, *, &, ^).")
+    @NotBlank(message = PASSWORD_NOT_BLANK)
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[+\\-*&^]).{8,}$", message = PASSWORD_PATTERN)
     private String password;
 
-    @NotBlank(message = "Email cannot be empty")
-    @Email(message = "Email must be valid.")
+    @NotBlank(message = EMAIL_NOT_BLANK)
+    @Email(message = EMAIL_INVALID)
     private String email;
 
-    @NotBlank(message = "Phone number cannot be empty")
-    @Pattern(regexp = "^\\d{10}$", message = "Phone number must be exactly 10 digits.")
+    @NotBlank(message = PHONE_NOT_BLANK)
+    @Pattern(regexp = "^\\d{10}$", message = PHONE_PATTERN)
     private String phoneNumber;
 }
