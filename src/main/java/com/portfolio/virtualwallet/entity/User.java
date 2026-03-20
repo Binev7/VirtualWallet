@@ -2,9 +2,6 @@ package com.portfolio.virtualwallet.entity;
 
 import com.portfolio.virtualwallet.security.constants.SecurityConstants;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +9,10 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import java.util.Collection;
-import java.util.List;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -24,28 +21,22 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails{
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, updatable = false)
-    @Size(min = 2, max = 20, message = "Username must be between 2 and 20 symbols")
+    @Column(nullable = false, unique = true, updatable = false, length = 20)
     private String username;
 
     @Column(nullable = false)
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[+\\-*&^]).{8,}$",
-            message = "Password must be at least 8 characters and contain a capital letter," +
-                    " a digit, and a special symbol (+, -, *, &, ^).")
     private String password;
 
     @Column(nullable = false, unique = true)
-    @Email(message = "Email must be valid.")
     private String email;
 
-    @Column(nullable = false, unique = true)
-    @Pattern(regexp = "^\\d{10}$", message = "Phone number must be exactly 10 digits.")
+    @Column(nullable = false, unique = true, length = 10)
     private String phoneNumber;
 
     @Column
@@ -58,7 +49,7 @@ public class User implements UserDetails{
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch =  FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Card> cards = new HashSet<>();
 
     @Override
@@ -86,4 +77,3 @@ public class User implements UserDetails{
         return true;
     }
 }
-
