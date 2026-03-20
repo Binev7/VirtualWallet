@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import static com.portfolio.virtualwallet.entity.dto.auth.constants.ValidationMessages.*;
+import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.*;
 
 @Data
 public class UserRegisterDto {

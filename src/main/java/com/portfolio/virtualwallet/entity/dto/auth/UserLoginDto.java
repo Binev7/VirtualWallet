@@ -3,7 +3,7 @@ package com.portfolio.virtualwallet.entity.dto.auth;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-import static com.portfolio.virtualwallet.entity.dto.auth.constants.ValidationMessages.*;
+import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.*;
 
 @Data
 public class UserLoginDto {
