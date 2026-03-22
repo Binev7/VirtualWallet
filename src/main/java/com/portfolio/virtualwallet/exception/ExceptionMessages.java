@@ -20,4 +20,9 @@ public class ExceptionMessages {
         public final String INVALID_OWNER = "You are not the owner of this card.";
     }
 
+    @UtilityClass
+    public static final class Security {
+        public static final String UNAUTHENTICATED = "User is not authenticated. Please log in.";
+    }
+
 }
