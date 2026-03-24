@@ -25,4 +25,8 @@ public class ExceptionMessages {
         public static final String UNAUTHENTICATED = "User is not authenticated. Please log in.";
     }
 
+    @UtilityClass
+    public static final class System {
+        public static final String UNEXPECTED_ERROR = "An unexpected error occurred.";
+    }
 }
