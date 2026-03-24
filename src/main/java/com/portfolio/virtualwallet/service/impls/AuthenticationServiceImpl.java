@@ -56,11 +56,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponseDto login(UserLoginDto request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new EntityNotFoundException(String.format(USER_NOT_FOUND, request.getUsername())));
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new EntityNotFoundException(String.format(USER_NOT_FOUND, request.getEmail())));
 
         String jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponseDto(jwtToken);
