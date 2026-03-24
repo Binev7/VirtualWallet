@@ -1,0 +1,22 @@
+package com.portfolio.virtualwallet.entity.dto.error;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ApiErrorResponseDto {
+
+    private int status;
+    private String error;
+    private String message;
+
+    @Builder.Default
+    private LocalDateTime timestamp = LocalDateTime.now();
+}
