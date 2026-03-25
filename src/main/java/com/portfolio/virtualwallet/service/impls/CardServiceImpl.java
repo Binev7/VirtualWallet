@@ -14,7 +14,6 @@ import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.service.interfaces.CardService;
 import com.portfolio.virtualwallet.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,10 +36,10 @@ public class CardServiceImpl implements CardService {
         String currentUsername = SecurityUtils.getCurrentUsername();
 
         User user = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new EntityNotFoundException(NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
         if (cardRepository.existsByCardNumber(request.getCardNumber())) {
-            throw new DuplicateEntityException(ALREADY_EXISTS);
+            throw new DuplicateEntityException(CARD_ALREADY_EXISTS);
         }
 
         Card card = cardMapper.toEntity(request);
@@ -89,6 +88,6 @@ public class CardServiceImpl implements CardService {
         String username = SecurityUtils.getCurrentUsername();
 
         return cardRepository.findByIdAndUserUsername(cardId, username)
-                .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.Card.NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.Card.CARD_NOT_FOUND));
     }
 }

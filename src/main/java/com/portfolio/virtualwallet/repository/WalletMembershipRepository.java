@@ -9,13 +9,18 @@ import java.util.Optional;
 
 @Repository
 public interface WalletMembershipRepository extends JpaRepository<WalletMembership, Long> {
-    List<WalletMembership> findByUserUsername(String username);
 
-    Optional<WalletMembership> findByUserUsernameAndIsDefaultTrue(String username);
+    List<WalletMembership> findAllByUserUsername(String username);
+
+    List<WalletMembership> findAllByWalletId(Long walletId);
+
+    Optional<WalletMembership> findByWalletIdAndUserId(Long walletId, Long userId);
+
+    boolean existsByWalletNameAndUserUsername(String walletName, String username);
+
+    void deleteAllByWalletId(Long walletId);
 
     Optional<WalletMembership> findByWalletIdAndUserUsername(Long walletId, String username);
 
-    List<WalletMembership> findByWalletId(Long walletId);
-
-    boolean existsByWalletNameAndUserUsername(String walletName, String username);
+    Optional<WalletMembership> findByUserUsernameAndIsDefaultTrue(String username);
 }

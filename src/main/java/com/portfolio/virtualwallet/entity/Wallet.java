@@ -1,10 +1,7 @@
 package com.portfolio.virtualwallet.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -14,6 +11,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Wallet {
 
     @Id
@@ -23,6 +21,7 @@ public class Wallet {
     @Column(nullable = false, length = 30)
     private String name;
 
+    @Builder.Default
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal balance = BigDecimal.ZERO;
 
@@ -30,6 +29,7 @@ public class Wallet {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    @Builder.Default
     @Column(name = "is_joint", nullable = false)
     private boolean isJoint = false;
 }
