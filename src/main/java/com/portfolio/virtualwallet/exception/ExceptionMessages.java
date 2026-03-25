@@ -28,6 +28,8 @@ public class ExceptionMessages {
     @UtilityClass
     public class System {
         public static final String UNEXPECTED_ERROR = "An unexpected error occurred.";
+        public static final String UNEXPECTED_ERROR_LOG = "Unexpected error occurred: {}";
+        public static final String VALIDATION_FAILED = "Validation failed";
     }
 
     @UtilityClass
