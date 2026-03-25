@@ -23,8 +23,17 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return identifier -> {
+            // Ако подаденият стринг съдържа '@', значи идва от Логин и търсим по Имейл
+            if (identifier.contains("@")) {
+                return userRepository.findByEmail(identifier)
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + identifier));
+            }
+
+            // Иначе, значи идва от JWT Токена и търсим по Username
+            return userRepository.findByUsername(identifier)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + identifier));
+        };
     }
 
     @Bean
