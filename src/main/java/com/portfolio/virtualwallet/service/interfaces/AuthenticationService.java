@@ -9,4 +9,6 @@ public interface AuthenticationService {
     AuthenticationResponseDto register(UserRegisterDto request);
 
     AuthenticationResponseDto login(UserLoginDto request);
+
+    void verifyEmail(String token);
 }
