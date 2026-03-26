@@ -1,7 +1,9 @@
 package com.portfolio.virtualwallet.utils;
 
+import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.entity.Wallet;
 import com.portfolio.virtualwallet.exception.EntityNotFoundException;
+import com.portfolio.virtualwallet.exception.ExceptionMessages;
 import com.portfolio.virtualwallet.exception.UnauthorizedException;
 import com.portfolio.virtualwallet.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,5 +28,11 @@ public class WalletValidationHelper {
         }
 
         return wallet;
+    }
+
+    public void verifyUserCanMakeTransactions(User user) {
+        if (!user.isEmailVerified()) {
+            throw new UnauthorizedException(ExceptionMessages.Verification.UNVERIFIED_EMAIL_ACTION);
+        }
     }
 }
