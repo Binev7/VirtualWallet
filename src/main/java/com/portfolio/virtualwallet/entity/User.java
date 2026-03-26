@@ -2,10 +2,7 @@ package com.portfolio.virtualwallet.entity;
 
 import com.portfolio.virtualwallet.security.constants.SecurityConstants;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +16,7 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User implements UserDetails {
@@ -51,6 +49,10 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Card> cards = new HashSet<>();
+
+    @Builder.Default
+    @Column(name = "is_email_verified", nullable = false)
+    private boolean isEmailVerified = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
