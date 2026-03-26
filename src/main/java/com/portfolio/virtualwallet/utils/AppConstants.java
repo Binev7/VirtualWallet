@@ -23,5 +23,19 @@ public final class AppConstants {
     @UtilityClass
     public class Logging {
         public static final String REGISTRATION_SUCCESS = "Registration successful for user: {}. Verification link: {}";
+        public static final String EMAIL_SEND_SUCCESS = "Verification email sent successfully to: {}";
+        public static final String EMAIL_SEND_ERROR = "Failed to send verification email to: {}";
+    }
+
+    @UtilityClass
+    public class Email {
+        public static final String VERIFICATION_SUBJECT = "Verify Your Virtual Wallet Account";
+        public static final String VERIFICATION_TEMPLATE = "verification-email";
+        public static final String URL_VARIABLE = "confirmationUrl";
+    }
+
+    @UtilityClass
+    public class SuccessMessages {
+        public static final String EMAIL_VERIFIED = "Email verified successfully! You can now use your Virtual Wallet.";
     }
 }
