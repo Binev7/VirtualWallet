@@ -4,6 +4,7 @@ import com.portfolio.virtualwallet.automation.event.OnRegistrationCompleteEvent;
 import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.entity.VerificationToken;
 import com.portfolio.virtualwallet.repository.VerificationTokenRepository;
+import com.portfolio.virtualwallet.service.interfaces.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -21,6 +22,7 @@ import static com.portfolio.virtualwallet.utils.AppConstants.Logging.REGISTRATIO
 public class RegistrationListener {
 
     private final VerificationTokenRepository tokenRepository;
+    private final EmailService emailService;
 
     @EventListener
     public void handleRegistrationComplete(OnRegistrationCompleteEvent event) {
@@ -36,7 +38,8 @@ public class RegistrationListener {
         tokenRepository.save(verificationToken);
 
         String confirmationUrl = event.getAppUrl() + VERIFY_EMAIL_ENDPOINT + token;
-
         log.info(REGISTRATION_SUCCESS, user.getEmail(), confirmationUrl);
+
+        emailService.sendVerificationEmail(user.getEmail(), confirmationUrl);
     }
 }
