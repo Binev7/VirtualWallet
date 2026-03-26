@@ -44,4 +44,16 @@ public class ExceptionMessages {
         public static final String WALLET_CANNOT_REMOVE_OWNER = "The owner cannot be removed from the wallet.";
         public static final String WALLET_CANNOT_MODIFY_OWNER_RIGHTS = "You cannot modify the rights of the wallet owner.";
     }
+
+    @UtilityClass
+    public class Token {
+        public static final String INVALID_TOKEN = "The verification token is invalid or does not exist.";
+        public static final String EXPIRED_TOKEN = "The verification token has expired. Please request a new one.";
+    }
+
+    @UtilityClass
+    public class Verification {
+        public static final String EMAIL_ALREADY_VERIFIED = "This email is already verified.";
+        public static final String UNVERIFIED_EMAIL_ACTION = "You must verify your email before performing this action.";
+    }
 }
