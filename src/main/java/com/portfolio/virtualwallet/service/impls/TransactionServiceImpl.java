@@ -6,9 +6,14 @@ import com.portfolio.virtualwallet.entity.Transaction;
 import com.portfolio.virtualwallet.entity.TransactionOtp;
 import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.entity.Wallet;
+import com.portfolio.virtualwallet.entity.dto.transaction.OtpVerificationRequestDto;
 import com.portfolio.virtualwallet.entity.dto.transaction.TransactionResponseDto;
 import com.portfolio.virtualwallet.entity.dto.transaction.TransferRequestDto;
+import com.portfolio.virtualwallet.entity.enums.TransactionStatus;
+import com.portfolio.virtualwallet.exception.EntityNotFoundException;
 import com.portfolio.virtualwallet.mapper.TransactionMapper;
+import com.portfolio.virtualwallet.repository.TransactionOtpRepository;
+import com.portfolio.virtualwallet.repository.TransactionRepository;
 import com.portfolio.virtualwallet.service.interfaces.TransactionService;
 import com.portfolio.virtualwallet.utils.TransactionHelper;
 import com.portfolio.virtualwallet.utils.WalletValidationHelper;
@@ -17,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import static com.portfolio.virtualwallet.exception.ExceptionMessages.Transaction.*;
 
 import java.math.BigDecimal;
 
@@ -31,6 +37,8 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionHelper transactionHelper;
     private final TransactionMapper transactionMapper;
     private final ApplicationEventPublisher eventPublisher;
+    private final TransactionOtpRepository otpRepository;
+    private final TransactionRepository transactionRepository;
 
     @Value("${app.transaction.large-amount-threshold}")
     private BigDecimal largeAmountThreshold;
@@ -59,5 +67,35 @@ public class TransactionServiceImpl implements TransactionService {
 
             return transactionMapper.toResponseDto(transaction, TRANSFER_COMPLETED);
         }
+    }
+
+    @Override
+    @Transactional
+    public TransactionResponseDto verifyOtp(User currentUser, OtpVerificationRequestDto request) {
+        TransactionOtp otp = otpRepository.findByTransactionId(request.getTransactionId())
+                .orElseThrow(() -> new EntityNotFoundException(OTP_NOT_FOUND));
+
+        Transaction transaction = otp.getTransaction();
+
+        validationHelper.getWalletIfOwner(transaction.getSenderWallet().getId());
+
+        if (otp.isExpired()) {
+            transaction.setStatus(TransactionStatus.FAILED);
+            transactionRepository.save(transaction);
+            otpRepository.delete(otp);
+            throw new IllegalArgumentException(OTP_EXPIRED);
+        }
+
+        if (!otp.getOtpCode().equals(request.getOtpCode())) {
+            throw new IllegalArgumentException(OTP_INVALID);
+        }
+
+        transactionHelper.executeMoneyTransfer(transaction, transaction.getSenderWallet(), transaction.getReceiverWallet());
+
+        otpRepository.delete(otp);
+
+        eventPublisher.publishEvent(new OnTransactionSuccessEvent(transaction));
+
+        return transactionMapper.toResponseDto(transaction, TRANSFER_COMPLETED);
     }
 }

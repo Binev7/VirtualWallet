@@ -61,5 +61,8 @@ public class ExceptionMessages {
     public class Transaction {
         public static final String INSUFFICIENT_FUNDS = "Insufficient funds in the wallet to complete this transaction.";
         public static final String TRANSACTION_NOT_FOUND = "Transaction with the provided ID does not exist.";
+        public static final String OTP_NOT_FOUND = "OTP not found for this transaction.";
+        public static final String OTP_EXPIRED = "OTP code has expired. Transaction failed.";
+        public static final String OTP_INVALID = "Invalid OTP code.";
     }
 }
