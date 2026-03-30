@@ -1,7 +1,11 @@
 package com.portfolio.virtualwallet.automation.listener;
 
 import com.portfolio.virtualwallet.automation.event.OnLargeTransactionEvent;
+import com.portfolio.virtualwallet.automation.event.OnRecurringTransactionFailedEvent;
 import com.portfolio.virtualwallet.automation.event.OnRegistrationCompleteEvent;
+import com.portfolio.virtualwallet.automation.event.OnTransactionSuccessEvent;
+import com.portfolio.virtualwallet.entity.RecurringTransaction;
+import com.portfolio.virtualwallet.entity.Transaction;
 import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.service.interfaces.EmailService;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +53,50 @@ public class EmailNotificationListener {
         vars.put(OTP_VARIABLE, otpCode);
 
         emailService.sendHtmlEmail(email, OTP_SUBJECT, OTP_TEMPLATE, vars);
+
+        log.info(EMAIL_SEND_SUCCESS, email);
+    }
+
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleTransactionSuccess(OnTransactionSuccessEvent event) {
+        Transaction tx = event.getTransaction();
+
+        Map<String, Object> senderVars = new HashMap<>();
+        senderVars.put(AMOUNT_VARIABLE, tx.getAmount());
+        senderVars.put(RECIPIENT_VARIABLE, tx.getReceiverWallet().getOwner().getUsername());
+
+        emailService.sendHtmlEmail(
+                tx.getSenderWallet().getOwner().getEmail(),
+                TRANSACTION_SUCCESS_SUBJECT,
+                TRANSACTION_SUCCESS_TEMPLATE,
+                senderVars
+        );
+
+        Map<String, Object> receiverVars = new HashMap<>();
+        receiverVars.put(AMOUNT_VARIABLE, tx.getAmount());
+        receiverVars.put(SENDER_VARIABLE, tx.getSenderWallet().getOwner().getUsername());
+
+        emailService.sendHtmlEmail(
+                tx.getReceiverWallet().getOwner().getEmail(),
+                RECEIVED_MONEY_SUBJECT,
+                RECEIVED_MONEY_TEMPLATE,
+                receiverVars
+        );
+    }
+
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleRecurringTransactionFailure(OnRecurringTransactionFailedEvent event) {
+        RecurringTransaction rTx = event.getRecurringTransaction();
+        String email = rTx.getSenderWallet().getOwner().getEmail();
+
+        Map<String, Object> vars = new HashMap<>();
+        vars.put(AMOUNT_VARIABLE, rTx.getAmount());
+        vars.put(RECIPIENT_VARIABLE, rTx.getReceiverWallet().getOwner().getUsername());
+        vars.put(REASON_VARIABLE, event.getFailureReason());
+
+        emailService.sendHtmlEmail(email, RECURRING_FAILED_SUBJECT, RECURRING_FAILED_TEMPLATE, vars);
 
         log.info(EMAIL_SEND_SUCCESS, email);
     }

@@ -1,6 +1,7 @@
 package com.portfolio.virtualwallet.service.impls;
 
 import com.portfolio.virtualwallet.automation.event.OnLargeTransactionEvent;
+import com.portfolio.virtualwallet.automation.event.OnTransactionSuccessEvent;
 import com.portfolio.virtualwallet.entity.Transaction;
 import com.portfolio.virtualwallet.entity.TransactionOtp;
 import com.portfolio.virtualwallet.entity.User;
@@ -53,6 +54,8 @@ public class TransactionServiceImpl implements TransactionService {
             return transactionMapper.toResponseDto(transaction, OTP_SENT);
         } else {
             transactionHelper.executeMoneyTransfer(transaction, senderWallet, receiverWallet);
+
+            eventPublisher.publishEvent(new OnTransactionSuccessEvent(transaction));
 
             return transactionMapper.toResponseDto(transaction, TRANSFER_COMPLETED);
         }
