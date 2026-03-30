@@ -1,7 +1,9 @@
 package com.portfolio.virtualwallet.mapper;
 
+import com.portfolio.virtualwallet.entity.RecurringTransaction;
 import com.portfolio.virtualwallet.entity.Transaction;
 import com.portfolio.virtualwallet.entity.Wallet;
+import com.portfolio.virtualwallet.entity.dto.transaction.RecurringTransactionRequestDto;
 import com.portfolio.virtualwallet.entity.dto.transaction.TransactionResponseDto;
 import com.portfolio.virtualwallet.entity.enums.TransactionType;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,18 @@ public class TransactionMapper {
                 .amount(transaction.getAmount())
                 .message(message)
                 .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    public RecurringTransaction createRecurringTransferEntity(RecurringTransactionRequestDto request, Wallet sender, Wallet receiver, LocalDateTime nextExecutionTime) {
+        return RecurringTransaction.builder()
+                .amount(request.getAmount())
+                .type(TransactionType.TRANSFER)
+                .interval(request.getInterval())
+                .senderWallet(sender)
+                .receiverWallet(receiver)
+                .isActive(true)
+                .nextExecutionTime(nextExecutionTime)
                 .build();
     }
 }

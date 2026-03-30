@@ -3,6 +3,7 @@ package com.portfolio.virtualwallet.utils;
 import com.portfolio.virtualwallet.entity.Transaction;
 import com.portfolio.virtualwallet.entity.TransactionOtp;
 import com.portfolio.virtualwallet.entity.Wallet;
+import com.portfolio.virtualwallet.entity.enums.RecurringInterval;
 import com.portfolio.virtualwallet.entity.enums.TransactionStatus;
 import com.portfolio.virtualwallet.repository.TransactionOtpRepository;
 import com.portfolio.virtualwallet.repository.TransactionRepository;
@@ -50,5 +51,14 @@ public class TransactionHelper {
         SecureRandom secureRandom = new SecureRandom();
         int randomCode = secureRandom.nextInt(1000000);
         return String.format("%06d", randomCode);
+    }
+
+    public LocalDateTime calculateNextExecutionTime(RecurringInterval interval) {
+        LocalDateTime now = LocalDateTime.now();
+        return switch (interval) {
+            case DAILY -> now.plusDays(1);
+            case WEEKLY -> now.plusWeeks(1);
+            case MONTHLY -> now.plusMonths(1);
+        };
     }
 }
