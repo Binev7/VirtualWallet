@@ -17,7 +17,7 @@ public class ExceptionMessages {
     public class Card {
         public static final String CARD_ALREADY_EXISTS = "Card with this number already exists.";
         public static final String CARD_NOT_FOUND = "Card not found.";
-        public static final String INVALID_CARD_OWNER = "You are not the owner of this card.";
+        public static final String CARD_NOT_OWNER = "You do not have permission to use this card.";
     }
 
     @UtilityClass
@@ -64,5 +64,13 @@ public class ExceptionMessages {
         public static final String OTP_NOT_FOUND = "OTP not found for this transaction.";
         public static final String OTP_EXPIRED = "OTP code has expired. Transaction failed.";
         public static final String OTP_INVALID = "Invalid OTP code.";
+    }
+
+    @UtilityClass
+    public class Bank {
+        public static final String BANK_REJECTED_TRANSACTION = "The bank rejected the transaction. Please check your card details or balance.";
+        public static final String BANK_UNAVAILABLE = "The banking service is currently unavailable. Please try again later.";
+        public static final String EXTERNAL_INSUFFICIENT_FUNDS = "Insufficient funds in the external bank account.";
+        public static final String EXTERNAL_REJECTED_PAYOUT = "Bank rejected the payout request.";
     }
 }
