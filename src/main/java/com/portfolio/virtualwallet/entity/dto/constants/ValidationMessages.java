@@ -30,4 +30,5 @@ public class ValidationMessages {
     public static final String RECEIVER_WALLET_ID_NOT_NULL = "Receiver wallet ID is required.";
     public static final String AMOUNT_NOT_NULL = "Amount is required.";
     public static final String AMOUNT_MIN_VALUE = "Transfer amount must be greater than zero.";
+    public static final String INTERVAL_NOT_NULL = "Recurring interval is required.";
 }
