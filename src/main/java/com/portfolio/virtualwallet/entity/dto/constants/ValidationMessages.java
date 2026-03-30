@@ -24,4 +24,10 @@ public class ValidationMessages {
     // --- WALLET VALIDATION ---
     public final String WALLET_NAME_NOT_BLANK = "Wallet name cannot be empty.";
     public final String WALLET_NAME_SIZE = "Wallet name must be between 2 and 30 characters.";
+
+    // --- TRANSACTION VALIDATION ---
+    public static final String SENDER_WALLET_ID_NOT_NULL = "Sender wallet ID is required.";
+    public static final String RECEIVER_WALLET_ID_NOT_NULL = "Receiver wallet ID is required.";
+    public static final String AMOUNT_NOT_NULL = "Amount is required.";
+    public static final String AMOUNT_MIN_VALUE = "Transfer amount must be greater than zero.";
 }
