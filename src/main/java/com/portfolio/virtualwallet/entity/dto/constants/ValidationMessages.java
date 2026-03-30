@@ -31,4 +31,8 @@ public class ValidationMessages {
     public static final String AMOUNT_NOT_NULL = "Amount is required.";
     public static final String AMOUNT_MIN_VALUE = "Transfer amount must be greater than zero.";
     public static final String INTERVAL_NOT_NULL = "Recurring interval is required.";
+
+    // --- OTP VALIDATION ---
+    public static final String TRANSACTION_ID_NOT_NULL = "Transaction ID is required.";
+    public static final String OTP_CODE_NOT_BLANK = "OTP code cannot be empty.";
 }
