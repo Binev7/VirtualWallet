@@ -46,11 +46,14 @@ public class EmailNotificationListener {
     @Async
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handleLargeTransaction(OnLargeTransactionEvent event) {
+        Transaction tx = event.getOtp().getTransaction();
+
         String email = event.getUserEmail();
         String otpCode = event.getOtp().getOtpCode();
 
         Map<String, Object> vars = new HashMap<>();
         vars.put(OTP_VARIABLE, otpCode);
+        vars.put(AMOUNT_VARIABLE, tx.getAmount());
 
         emailService.sendHtmlEmail(email, OTP_SUBJECT, OTP_TEMPLATE, vars);
 

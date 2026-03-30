@@ -35,4 +35,10 @@ public class ValidationMessages {
     // --- OTP VALIDATION ---
     public static final String TRANSACTION_ID_NOT_NULL = "Transaction ID is required.";
     public static final String OTP_CODE_NOT_BLANK = "OTP code cannot be empty.";
+
+    // --- DEPOSIT VALIDATION ---
+    public static final String CARD_ID_NOT_NULL = "Card ID is required.";
+    public static final String CVV_NOT_BLANK = "CVV code is required.";
+    public static final String CVV_PATTERN = "CVV must be exactly 3 digits.";
+    public static final String WALLET_ID_NOT_NULL = "Wallet ID is required.";
 }

@@ -43,6 +43,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private String appBaseUrl;
 
     @Override
+    @Transactional
     public AuthenticationResponseDto register(UserRegisterDto request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new DuplicateEntityException(USERNAME_ALREADY_EXISTS);

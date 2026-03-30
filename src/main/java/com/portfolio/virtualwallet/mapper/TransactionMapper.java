@@ -1,5 +1,6 @@
 package com.portfolio.virtualwallet.mapper;
 
+import com.portfolio.virtualwallet.entity.Card;
 import com.portfolio.virtualwallet.entity.RecurringTransaction;
 import com.portfolio.virtualwallet.entity.Transaction;
 import com.portfolio.virtualwallet.entity.Wallet;
@@ -42,6 +43,28 @@ public class TransactionMapper {
                 .receiverWallet(receiver)
                 .isActive(true)
                 .nextExecutionTime(nextExecutionTime)
+                .build();
+    }
+
+    public Transaction createDepositEntity(BigDecimal amount, Wallet receiver, Card sourceCard) {
+        return Transaction.builder()
+                .amount(amount)
+                .type(TransactionType.DEPOSIT)
+                .receiverWallet(receiver)
+                .card(sourceCard)
+                .status(com.portfolio.virtualwallet.entity.enums.TransactionStatus.COMPLETED)
+                .completedAt(LocalDateTime.now())
+                .build();
+    }
+
+    public Transaction createWithdrawalEntity(BigDecimal amount, Wallet sender, Card targetCard) {
+        return Transaction.builder()
+                .amount(amount)
+                .type(TransactionType.WITHDRAW)
+                .senderWallet(sender)
+                .card(targetCard)
+                .status(com.portfolio.virtualwallet.entity.enums.TransactionStatus.COMPLETED)
+                .completedAt(LocalDateTime.now())
                 .build();
     }
 }

@@ -54,5 +54,13 @@ public final class AppConstants {
         public static final String OTP_SENT = "Verification OTP sent to your email.";
         public static final String RECURRING_SETUP_SUCCESS = "Recurring transaction setup successfully.";
         public static final String RECURRING_CANCELLED = "Recurring transaction cancelled successfully.";
+        public static final String DEPOSIT_COMPLETED = "Deposit completed successfully.";
+        public static final String WITHDRAWAL_COMPLETED = "Withdrawal completed successfully.";
+    }
+
+    @UtilityClass
+    public class Bank {
+        public static final String DEPOSIT_REF_PREFIX = "BANK-REF-";
+        public static final String PAYOUT_REF_PREFIX = "PAYOUT-REF-";
     }
 }
