@@ -1,0 +1,33 @@
+package com.portfolio.virtualwallet.mapper;
+
+import com.portfolio.virtualwallet.entity.Transaction;
+import com.portfolio.virtualwallet.entity.Wallet;
+import com.portfolio.virtualwallet.entity.dto.transaction.TransactionResponseDto;
+import com.portfolio.virtualwallet.entity.enums.TransactionType;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Component
+public class TransactionMapper {
+
+    public Transaction createTransferEntity(BigDecimal amount, Wallet sender, Wallet receiver) {
+        return Transaction.builder()
+                .amount(amount)
+                .type(TransactionType.TRANSFER)
+                .senderWallet(sender)
+                .receiverWallet(receiver)
+                .build();
+    }
+
+    public TransactionResponseDto toResponseDto(Transaction transaction, String message) {
+        return TransactionResponseDto.builder()
+                .transactionId(transaction.getId())
+                .status(transaction.getStatus())
+                .amount(transaction.getAmount())
+                .message(message)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+}
