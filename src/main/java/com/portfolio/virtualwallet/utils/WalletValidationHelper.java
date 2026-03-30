@@ -9,6 +9,8 @@ import com.portfolio.virtualwallet.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Wallet.*;
 
 @Component
@@ -16,6 +18,11 @@ import static com.portfolio.virtualwallet.exception.ExceptionMessages.Wallet.*;
 public class WalletValidationHelper {
 
     private final WalletRepository walletRepository;
+
+    public Wallet getWalletById(Long walletId) {
+        return walletRepository.findById(walletId)
+                .orElseThrow(() -> new EntityNotFoundException(WALLET_NOT_FOUND));
+    }
 
     public Wallet getWalletIfOwner(Long walletId) {
         String currentUsername = SecurityUtils.getCurrentUsername();
@@ -33,6 +40,12 @@ public class WalletValidationHelper {
     public void verifyUserCanMakeTransactions(User user) {
         if (!user.isEmailVerified()) {
             throw new UnauthorizedException(ExceptionMessages.Verification.UNVERIFIED_EMAIL_ACTION);
+        }
+    }
+
+    public void verifySufficientFunds(Wallet wallet, BigDecimal amount) {
+        if (wallet.getBalance().compareTo(amount) < 0) {
+            throw new IllegalArgumentException(ExceptionMessages.Transaction.INSUFFICIENT_FUNDS);
         }
     }
 }

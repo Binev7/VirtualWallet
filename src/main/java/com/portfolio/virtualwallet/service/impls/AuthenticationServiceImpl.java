@@ -61,11 +61,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setBlocked(false);
         user.setEmailVerified(false);
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user, appBaseUrl));
+        String tokenString = java.util.UUID.randomUUID().toString();
+        VerificationToken verificationToken = userMapper.createVerificationToken(savedUser, tokenString);
+        tokenRepository.save(verificationToken);
 
-        String jwtToken = jwtService.generateToken(user);
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(savedUser, appBaseUrl, tokenString));
+
+        String jwtToken = jwtService.generateToken(savedUser);
         return new AuthenticationResponseDto(jwtToken);
     }
 

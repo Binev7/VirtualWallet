@@ -56,4 +56,10 @@ public class ExceptionMessages {
         public static final String EMAIL_ALREADY_VERIFIED = "This email is already verified.";
         public static final String UNVERIFIED_EMAIL_ACTION = "You must verify your email before performing this action.";
     }
+
+    @UtilityClass
+    public class Transaction {
+        public static final String INSUFFICIENT_FUNDS = "Insufficient funds in the wallet to complete this transaction.";
+        public static final String TRANSACTION_NOT_FOUND = "Transaction with the provided ID does not exist.";
+    }
 }

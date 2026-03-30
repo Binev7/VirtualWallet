@@ -9,4 +9,5 @@ import lombok.Getter;
 public class OnRegistrationCompleteEvent {
     private final User user;
     private final String appUrl;
+    private final String token;
 }
