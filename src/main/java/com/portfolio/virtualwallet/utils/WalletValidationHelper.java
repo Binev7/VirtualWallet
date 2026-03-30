@@ -1,16 +1,20 @@
 package com.portfolio.virtualwallet.utils;
 
+import com.portfolio.virtualwallet.entity.Card;
 import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.entity.Wallet;
 import com.portfolio.virtualwallet.exception.EntityNotFoundException;
 import com.portfolio.virtualwallet.exception.ExceptionMessages;
 import com.portfolio.virtualwallet.exception.UnauthorizedException;
+import com.portfolio.virtualwallet.repository.CardRepository;
 import com.portfolio.virtualwallet.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+import static com.portfolio.virtualwallet.exception.ExceptionMessages.Card.CARD_NOT_FOUND;
+import static com.portfolio.virtualwallet.exception.ExceptionMessages.Card.CARD_NOT_OWNER;
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Wallet.*;
 
 @Component
@@ -18,6 +22,7 @@ import static com.portfolio.virtualwallet.exception.ExceptionMessages.Wallet.*;
 public class WalletValidationHelper {
 
     private final WalletRepository walletRepository;
+    private final CardRepository cardRepository;
 
     public Wallet getWalletById(Long walletId) {
         return walletRepository.findById(walletId)
@@ -48,4 +53,18 @@ public class WalletValidationHelper {
             throw new IllegalArgumentException(ExceptionMessages.Transaction.INSUFFICIENT_FUNDS);
         }
     }
+
+    public Card getCardIfOwner(Long cardId) {
+        String currentUsername = SecurityUtils.getCurrentUsername();
+
+        Card card = cardRepository.findById(cardId)
+                .orElseThrow(() -> new EntityNotFoundException(CARD_NOT_FOUND));
+
+        if (!card.getUser().getUsername().equals(currentUsername)) {
+            throw new UnauthorizedException(CARD_NOT_OWNER);
+        }
+
+        return card;
+    }
+
 }
