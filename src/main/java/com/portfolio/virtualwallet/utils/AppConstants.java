@@ -63,4 +63,28 @@ public final class AppConstants {
         public static final String DEPOSIT_REF_PREFIX = "BANK-REF-";
         public static final String PAYOUT_REF_PREFIX = "PAYOUT-REF-";
     }
+
+    @UtilityClass
+    public class Pagination {
+        public static final String DEFAULT_PAGE_NUMBER = "0";
+        public static final String DEFAULT_PAGE_SIZE = "10";
+    }
+
+    @UtilityClass
+    public class History {
+        public static final String INCOMING_DIRECTION = "INCOMING";
+        public static final String OUTGOING_DIRECTION = "OUTGOING";
+        public static final String EXTERNAL_BANK = "External Bank";
+        public static final int DEFAULT_HISTORY_MONTHS = 1;
+    }
+
+    @UtilityClass
+    public class EntityFields {
+        public static final String CREATED_AT = "createdAt";
+        public static final String SENDER_WALLET = "senderWallet";
+        public static final String RECEIVER_WALLET = "receiverWallet";
+        public static final String ID = "id";
+        public static final String TYPE = "type";
+        public static final String STATUS = "status";
+    }
 }
