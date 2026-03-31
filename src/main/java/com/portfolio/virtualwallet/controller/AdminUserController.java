@@ -29,4 +29,13 @@ public class AdminUserController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
         return ResponseEntity.ok(userService.adminSearchUsers(query, pageable));
     }
+
+    @PatchMapping("/{userId}/block-status")
+    public ResponseEntity<Void> toggleBlockStatus(
+            @PathVariable Long userId,
+            @RequestParam boolean isBlocked) {
+
+        userService.toggleUserBlockStatus(userId, isBlocked);
+        return ResponseEntity.noContent().build();
+    }
 }

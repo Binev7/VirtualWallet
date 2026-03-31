@@ -8,9 +8,8 @@ public final class AppConstants {
 
     private AppConstants() {}
 
-    public static final class Wallet {
-        private Wallet() {}
-
+    @UtilityClass
+    public final class Wallet {
         public static final String DEFAULT_WALLET_NAME = "Main Wallet";
         public static final BigDecimal INITIAL_BALANCE = BigDecimal.ZERO;
     }
@@ -89,5 +88,11 @@ public final class AppConstants {
         public static final String USERNAME = "username";
         public static final String EMAIL = "email";
         public static final String PHONE_NUMBER = "phoneNumber";
+    }
+
+    @UtilityClass
+    public class User {
+        public static final String USER_IS_BLOCKED = "Your account has been blocked due to suspicious activity. You cannot perform transactions.";
+        public static final String USER_NOT_FOUND = "User not found.";
     }
 }
