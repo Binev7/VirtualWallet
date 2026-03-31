@@ -5,7 +5,7 @@ import com.portfolio.virtualwallet.entity.VerificationToken;
 import com.portfolio.virtualwallet.entity.dto.auth.AuthenticationResponseDto;
 import com.portfolio.virtualwallet.entity.dto.auth.UserLoginDto;
 import com.portfolio.virtualwallet.entity.dto.auth.UserRegisterDto;
-import com.portfolio.virtualwallet.entity.Role;
+import com.portfolio.virtualwallet.entity.enums.Role;
 import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.exception.DuplicateEntityException;
 import com.portfolio.virtualwallet.exception.EntityNotFoundException;
