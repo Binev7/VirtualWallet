@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Card.CARD_NOT_FOUND;
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Card.CARD_NOT_OWNER;
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Wallet.*;
+import static com.portfolio.virtualwallet.utils.AppConstants.User.USER_IS_BLOCKED;
 
 @Component
 @RequiredArgsConstructor
@@ -43,6 +44,9 @@ public class WalletValidationHelper {
     }
 
     public void verifyUserCanMakeTransactions(User user) {
+        if (user.isBlocked()) {
+            throw new IllegalArgumentException(USER_IS_BLOCKED);
+        }
         if (!user.isEmailVerified()) {
             throw new UnauthorizedException(ExceptionMessages.Verification.UNVERIFIED_EMAIL_ACTION);
         }
