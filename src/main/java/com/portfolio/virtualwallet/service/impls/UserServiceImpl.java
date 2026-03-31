@@ -14,6 +14,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.portfolio.virtualwallet.utils.AppConstants.User.USER_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -37,5 +39,15 @@ public class UserServiceImpl implements UserService {
 
         return userRepository.findAll(spec, pageable)
                 .map(userMapper::toAdminDto);
+    }
+
+    @Override
+    @Transactional
+    public void toggleUserBlockStatus(Long userId, boolean isBlocked) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
+
+        user.setBlocked(isBlocked);
+        userRepository.save(user);
     }
 }

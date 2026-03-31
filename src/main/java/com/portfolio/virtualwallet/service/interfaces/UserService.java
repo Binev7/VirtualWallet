@@ -9,4 +9,6 @@ public interface UserService {
     Page<UserPublicResponseDto> searchPublicUsers(String searchTerm, Pageable pageable);
 
     Page<UserDetailsAdminDto> adminSearchUsers(String searchTerm, Pageable pageable);
+
+    void toggleUserBlockStatus(Long userId, boolean isBlocked);
 }
