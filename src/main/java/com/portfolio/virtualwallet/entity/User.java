@@ -1,5 +1,6 @@
 package com.portfolio.virtualwallet.entity;
 
+import com.portfolio.virtualwallet.entity.enums.Role;
 import com.portfolio.virtualwallet.security.constants.SecurityConstants;
 import jakarta.persistence.*;
 import lombok.*;

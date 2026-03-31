@@ -86,5 +86,8 @@ public final class AppConstants {
         public static final String ID = "id";
         public static final String TYPE = "type";
         public static final String STATUS = "status";
+        public static final String USERNAME = "username";
+        public static final String EMAIL = "email";
+        public static final String PHONE_NUMBER = "phoneNumber";
     }
 }
