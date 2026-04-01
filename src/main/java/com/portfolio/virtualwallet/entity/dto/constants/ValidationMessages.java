@@ -41,4 +41,14 @@ public class ValidationMessages {
     public static final String CVV_NOT_BLANK = "CVV code is required.";
     public static final String CVV_PATTERN = "CVV must be exactly 3 digits.";
     public static final String WALLET_ID_NOT_NULL = "Wallet ID is required.";
+
+    // --- FORGOT PASSWORD ---
+    public static final String EMAIL_REQUIRED = "Email is required";
+    public static final String INVALID_EMAIL_FORMAT = "Invalid email format";
+    public static final String TOKEN_REQUIRED = "Token is required";
+    public static final String NEW_PASSWORD_REQUIRED = "New password is required";
+    public static final String PASSWORD_TOO_SHORT = "Password must be at least 8 characters long";
+    public static final String NEW_EMAIL_REQUIRED = "New email is required";
+    public static final String CONFIRM_PASSWORD_REQUIRED = "Confirm password is required";
+    public static final String PASSWORDS_DO_NOT_MATCH = "Passwords do not match";
 }
