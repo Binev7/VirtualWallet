@@ -5,6 +5,7 @@ import com.portfolio.virtualwallet.entity.RecurringTransaction;
 import com.portfolio.virtualwallet.entity.Transaction;
 import com.portfolio.virtualwallet.entity.Wallet;
 import com.portfolio.virtualwallet.entity.dto.transaction.RecurringTransactionRequestDto;
+import com.portfolio.virtualwallet.entity.dto.transaction.TransactionAdminDto;
 import com.portfolio.virtualwallet.entity.dto.transaction.TransactionHistoryDto;
 import com.portfolio.virtualwallet.entity.dto.transaction.TransactionResponseDto;
 import com.portfolio.virtualwallet.entity.enums.TransactionType;
@@ -97,6 +98,26 @@ public class TransactionMapper {
                 .date(transaction.getCreatedAt())
                 .counterparty(counterpartyName)
                 .direction(isIncoming ? INCOMING_DIRECTION : OUTGOING_DIRECTION)
+                .build();
+    }
+
+    public TransactionAdminDto toAdminDto(Transaction transaction) {
+        String senderName = transaction.getSenderWallet() != null
+                ? transaction.getSenderWallet().getOwner().getUsername()
+                : EXTERNAL_BANK;
+
+        String receiverName = transaction.getReceiverWallet() != null
+                ? transaction.getReceiverWallet().getOwner().getUsername()
+                : EXTERNAL_BANK;
+
+        return TransactionAdminDto.builder()
+                .transactionId(transaction.getId())
+                .amount(transaction.getAmount())
+                .type(transaction.getType().name())
+                .status(transaction.getStatus().name())
+                .date(transaction.getCreatedAt())
+                .senderUsername(senderName)
+                .receiverUsername(receiverName)
                 .build();
     }
 }
