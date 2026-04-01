@@ -64,6 +64,8 @@ public class ExceptionMessages {
         public static final String OTP_NOT_FOUND = "OTP not found for this transaction.";
         public static final String OTP_EXPIRED = "OTP code has expired. Transaction failed.";
         public static final String OTP_INVALID = "Invalid OTP code.";
+        public static final String RECURRING_NOT_FOUND = "Recurring transaction not found.";
+        public static final String NOT_OWNER_OF_RECURRING = "You are not authorized to cancel this recurring transaction.";
     }
 
     @UtilityClass
