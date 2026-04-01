@@ -5,4 +5,6 @@ import com.portfolio.virtualwallet.entity.dto.transaction.RecurringTransactionRe
 
 public interface RecurringTransactionService {
     void createRecurringTransfer(User currentUser, RecurringTransactionRequestDto request);
+
+    void cancelRecurringTransfer(User currentUser, Long recurringTransactionId);
 }
