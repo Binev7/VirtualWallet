@@ -6,16 +6,14 @@ import com.portfolio.virtualwallet.entity.Transaction;
 import com.portfolio.virtualwallet.entity.TransactionOtp;
 import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.entity.Wallet;
-import com.portfolio.virtualwallet.entity.dto.transaction.OtpVerificationRequestDto;
-import com.portfolio.virtualwallet.entity.dto.transaction.TransactionHistoryDto;
-import com.portfolio.virtualwallet.entity.dto.transaction.TransactionResponseDto;
-import com.portfolio.virtualwallet.entity.dto.transaction.TransferRequestDto;
+import com.portfolio.virtualwallet.entity.dto.transaction.*;
 import com.portfolio.virtualwallet.entity.enums.TransactionStatus;
 import com.portfolio.virtualwallet.entity.enums.TransactionType;
 import com.portfolio.virtualwallet.exception.EntityNotFoundException;
 import com.portfolio.virtualwallet.mapper.TransactionMapper;
 import com.portfolio.virtualwallet.repository.TransactionOtpRepository;
 import com.portfolio.virtualwallet.repository.TransactionRepository;
+import com.portfolio.virtualwallet.repository.specification.AdminTransactionSpecification;
 import com.portfolio.virtualwallet.repository.specification.TransactionSpecification;
 import com.portfolio.virtualwallet.service.interfaces.TransactionService;
 import com.portfolio.virtualwallet.utils.TransactionHelper;
@@ -127,5 +125,22 @@ public class TransactionServiceImpl implements TransactionService {
         Page<Transaction> transactions = transactionRepository.findAll(spec, pageable);
 
         return transactions.map(tx -> transactionMapper.toHistoryDto(tx, walletId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TransactionAdminDto> getGlobalTransactionsForAdmin(
+            LocalDateTime startDate, LocalDateTime endDate,
+            String username, String direction,
+            TransactionType type, TransactionStatus status,
+            int page, int size, String sortBy) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sortBy));
+
+        Specification<Transaction> spec = AdminTransactionSpecification.adminSearch(
+                startDate, endDate, username, direction, type, status);
+
+        return transactionRepository.findAll(spec, pageable)
+                .map(transactionMapper::toAdminDto);
     }
 }
