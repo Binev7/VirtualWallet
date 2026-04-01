@@ -44,6 +44,10 @@ public final class AppConstants {
         public static final String RECURRING_FAILED_SUBJECT = "Action Required: Recurring Transaction Failed";
         public static final String RECURRING_FAILED_TEMPLATE = "recurring-failed-email";
         public static final String REASON_VARIABLE = "reason";
+        public static final String PASSWORD_RESET_SUBJECT = "Password Reset Request";
+        public static final String PASSWORD_RESET_TEMPLATE = "reset-password-email";
+        public static final String RESET_TOKEN_VARIABLE = "resetToken";
+        public static final String USERNAME_VARIABLE = "username";
     }
 
     @UtilityClass
@@ -55,6 +59,9 @@ public final class AppConstants {
         public static final String RECURRING_CANCELLED = "Recurring transaction cancelled successfully.";
         public static final String DEPOSIT_COMPLETED = "Deposit completed successfully.";
         public static final String WITHDRAWAL_COMPLETED = "Withdrawal completed successfully.";
+        public static final String FORGOT_PASSWORD_SUCCESS = "If an account with this email exists, a password reset link has been sent.";
+        public static final String RESET_PASSWORD_SUCCESS = "Password has been successfully reset. You can now login.";
+        public static final String EMAIL_CHANGE_SUCCESS = "Email changed successfully. Please check your new inbox for the verification link.";
     }
 
     @UtilityClass

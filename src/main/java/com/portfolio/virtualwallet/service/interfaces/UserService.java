@@ -1,5 +1,6 @@
 package com.portfolio.virtualwallet.service.interfaces;
 
+import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.entity.dto.user.UserDetailsAdminDto;
 import com.portfolio.virtualwallet.entity.dto.user.UserPublicResponseDto;
 import org.springframework.data.domain.Page;
@@ -11,4 +12,6 @@ public interface UserService {
     Page<UserDetailsAdminDto> adminSearchUsers(String searchTerm, Pageable pageable);
 
     void toggleUserBlockStatus(Long userId, boolean isBlocked);
+
+    void changeEmail(User currentUser, String newEmail);
 }

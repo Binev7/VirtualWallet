@@ -1,8 +1,6 @@
 package com.portfolio.virtualwallet.controller;
 
-import com.portfolio.virtualwallet.entity.dto.auth.AuthenticationResponseDto;
-import com.portfolio.virtualwallet.entity.dto.auth.UserLoginDto;
-import com.portfolio.virtualwallet.entity.dto.auth.UserRegisterDto;
+import com.portfolio.virtualwallet.entity.dto.auth.*;
 import com.portfolio.virtualwallet.service.interfaces.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-import static com.portfolio.virtualwallet.utils.AppConstants.SuccessMessages.EMAIL_VERIFIED;
+import static com.portfolio.virtualwallet.utils.AppConstants.SuccessMessages.*;
 
 @RestController
 @RequestMapping("api/v1/auth")
@@ -36,5 +34,19 @@ public class AuthController {
         authenticationService.verifyEmail(token);
 
         return ResponseEntity.ok(Map.of("message", EMAIL_VERIFIED));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordDto request) {
+        authenticationService.forgotPassword(request);
+
+        return ResponseEntity.ok(Map.of("message", FORGOT_PASSWORD_SUCCESS));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordDto request) {
+        authenticationService.resetPassword(request);
+
+        return ResponseEntity.ok(Map.of("message", RESET_PASSWORD_SUCCESS));
     }
 }

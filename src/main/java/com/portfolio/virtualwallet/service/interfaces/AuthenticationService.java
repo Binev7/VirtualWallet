@@ -1,8 +1,6 @@
 package com.portfolio.virtualwallet.service.interfaces;
 
-import com.portfolio.virtualwallet.entity.dto.auth.AuthenticationResponseDto;
-import com.portfolio.virtualwallet.entity.dto.auth.UserLoginDto;
-import com.portfolio.virtualwallet.entity.dto.auth.UserRegisterDto;
+import com.portfolio.virtualwallet.entity.dto.auth.*;
 
 public interface AuthenticationService {
 
@@ -11,4 +9,8 @@ public interface AuthenticationService {
     AuthenticationResponseDto login(UserLoginDto request);
 
     void verifyEmail(String token);
+
+    void forgotPassword(ForgotPasswordDto request);
+
+    void resetPassword(ResetPasswordDto request);
 }
