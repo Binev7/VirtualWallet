@@ -88,6 +88,7 @@ public final class AppConstants {
         public static final String USERNAME = "username";
         public static final String EMAIL = "email";
         public static final String PHONE_NUMBER = "phoneNumber";
+        public static final String OWNER = "owner";
     }
 
     @UtilityClass
