@@ -55,8 +55,8 @@ public final class AppConstants {
         public static final String EMAIL_VERIFIED = "Email verified successfully! You can now use your Virtual Wallet.";
         public static final String TRANSFER_COMPLETED = "Transfer completed successfully.";
         public static final String OTP_SENT = "Verification OTP sent to your email.";
-        public static final String RECURRING_SETUP_SUCCESS = "Recurring transaction setup successfully.";
-        public static final String RECURRING_CANCELLED = "Recurring transaction cancelled successfully.";
+        public static final String RECURRING_CREATED_SUCCESS = "Recurring transaction successfully scheduled.";
+        public static final String RECURRING_CANCELLED_SUCCESS = "Recurring transaction cancelled successfully.";
         public static final String DEPOSIT_COMPLETED = "Deposit completed successfully.";
         public static final String WITHDRAWAL_COMPLETED = "Withdrawal completed successfully.";
         public static final String FORGOT_PASSWORD_SUCCESS = "If an account with this email exists, a password reset link has been sent.";
