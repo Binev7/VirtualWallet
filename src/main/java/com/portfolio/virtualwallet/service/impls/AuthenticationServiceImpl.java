@@ -1,10 +1,10 @@
 package com.portfolio.virtualwallet.service.impls;
 
+import com.portfolio.virtualwallet.automation.event.OnPasswordResetEvent;
 import com.portfolio.virtualwallet.automation.event.OnRegistrationCompleteEvent;
+import com.portfolio.virtualwallet.entity.PasswordResetToken;
 import com.portfolio.virtualwallet.entity.VerificationToken;
-import com.portfolio.virtualwallet.entity.dto.auth.AuthenticationResponseDto;
-import com.portfolio.virtualwallet.entity.dto.auth.UserLoginDto;
-import com.portfolio.virtualwallet.entity.dto.auth.UserRegisterDto;
+import com.portfolio.virtualwallet.entity.dto.auth.*;
 import com.portfolio.virtualwallet.entity.enums.Role;
 import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.exception.DuplicateEntityException;
@@ -12,6 +12,7 @@ import com.portfolio.virtualwallet.exception.EntityNotFoundException;
 import com.portfolio.virtualwallet.exception.ExceptionMessages;
 import com.portfolio.virtualwallet.exception.TokenExpiredException;
 import com.portfolio.virtualwallet.mapper.UserMapper;
+import com.portfolio.virtualwallet.repository.PasswordResetTokenRepository;
 import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.repository.VerificationTokenRepository;
 import com.portfolio.virtualwallet.security.JwtService;
@@ -38,6 +39,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserMapper userMapper;
     private final ApplicationEventPublisher eventPublisher;
     private final VerificationTokenRepository tokenRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Value("${app.base-url}")
     private String appBaseUrl;
@@ -108,5 +110,38 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userRepository.save(user);
 
         tokenRepository.delete(verificationToken);
+    }
+
+    @Override
+    @Transactional
+    public void forgotPassword(ForgotPasswordDto request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new EntityNotFoundException(String.format(USER_NOT_FOUND, request.getEmail())));
+
+        passwordResetTokenRepository.deleteByUser(user);
+
+        String tokenString = java.util.UUID.randomUUID().toString();
+        PasswordResetToken resetToken = new PasswordResetToken(tokenString, user);
+        passwordResetTokenRepository.save(resetToken);
+
+        eventPublisher.publishEvent(new OnPasswordResetEvent(user, appBaseUrl, tokenString));
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(ResetPasswordDto request) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(request.getToken())
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.Token.INVALID_TOKEN));
+
+        if (resetToken.isExpired()) {
+            passwordResetTokenRepository.delete(resetToken);
+            throw new TokenExpiredException(ExceptionMessages.Token.EXPIRED_TOKEN);
+        }
+
+        User user = resetToken.getUser();
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        passwordResetTokenRepository.delete(resetToken);
     }
 }
