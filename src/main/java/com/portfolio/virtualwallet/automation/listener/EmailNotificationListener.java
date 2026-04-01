@@ -1,9 +1,6 @@
 package com.portfolio.virtualwallet.automation.listener;
 
-import com.portfolio.virtualwallet.automation.event.OnLargeTransactionEvent;
-import com.portfolio.virtualwallet.automation.event.OnRecurringTransactionFailedEvent;
-import com.portfolio.virtualwallet.automation.event.OnRegistrationCompleteEvent;
-import com.portfolio.virtualwallet.automation.event.OnTransactionSuccessEvent;
+import com.portfolio.virtualwallet.automation.event.*;
 import com.portfolio.virtualwallet.entity.RecurringTransaction;
 import com.portfolio.virtualwallet.entity.Transaction;
 import com.portfolio.virtualwallet.entity.User;
@@ -100,6 +97,20 @@ public class EmailNotificationListener {
         vars.put(REASON_VARIABLE, event.getFailureReason());
 
         emailService.sendHtmlEmail(email, RECURRING_FAILED_SUBJECT, RECURRING_FAILED_TEMPLATE, vars);
+
+        log.info(EMAIL_SEND_SUCCESS, email);
+    }
+
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handlePasswordResetEvent(OnPasswordResetEvent event) {
+        String email = event.getUser().getEmail();
+
+        Map<String, Object> vars = new HashMap<>();
+        vars.put(RESET_TOKEN_VARIABLE, event.getToken());
+        vars.put(USERNAME_VARIABLE, event.getUser().getUsername());
+
+        emailService.sendHtmlEmail(email, PASSWORD_RESET_SUBJECT, PASSWORD_RESET_TEMPLATE, vars);
 
         log.info(EMAIL_SEND_SUCCESS, email);
     }
