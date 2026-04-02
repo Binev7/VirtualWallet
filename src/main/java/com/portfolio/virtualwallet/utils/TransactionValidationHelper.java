@@ -20,7 +20,7 @@ import static com.portfolio.virtualwallet.utils.AppConstants.User.USER_IS_BLOCKE
 
 @Component
 @RequiredArgsConstructor
-public class WalletValidationHelper {
+public class TransactionValidationHelper {
 
     private final WalletRepository walletRepository;
     private final CardRepository cardRepository;

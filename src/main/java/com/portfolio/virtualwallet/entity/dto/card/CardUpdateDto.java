@@ -8,8 +8,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-import static com.portfolio.virtualwallet.entity.dto.constants.CardValidationMessages.*;
-import static com.portfolio.virtualwallet.entity.dto.constants.CardValidationMessages.CARD_HOLDER_SIZE;
+import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.Card.*;
 
 @Data
 public class CardUpdateDto {

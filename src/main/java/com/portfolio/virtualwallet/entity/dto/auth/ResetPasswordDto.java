@@ -4,7 +4,7 @@ import com.portfolio.virtualwallet.entity.dto.validation.PasswordsMatch;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.*;
+import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.Auth.*;
 
 @Data
 @PasswordsMatch(message = PASSWORDS_DO_NOT_MATCH)

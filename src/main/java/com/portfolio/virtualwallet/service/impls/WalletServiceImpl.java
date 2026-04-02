@@ -16,7 +16,7 @@ import com.portfolio.virtualwallet.repository.WalletRepository;
 import com.portfolio.virtualwallet.service.interfaces.WalletService;
 import com.portfolio.virtualwallet.utils.AppConstants;
 import com.portfolio.virtualwallet.utils.SecurityUtils;
-import com.portfolio.virtualwallet.utils.WalletValidationHelper;
+import com.portfolio.virtualwallet.utils.TransactionValidationHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +36,7 @@ public class WalletServiceImpl implements WalletService {
     private final WalletMembershipRepository walletMembershipRepository;
     private final UserRepository userRepository;
     private final WalletMapper walletMapper;
-    private final WalletValidationHelper walletValidationHelper;
+    private final TransactionValidationHelper transactionValidationHelper;
 
 
     @Override
@@ -89,7 +89,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     @Transactional
     public WalletResponseDto updateWallet(Long id, WalletUpdateDto request) {
-        Wallet wallet = walletValidationHelper.getWalletIfOwner(id);
+        Wallet wallet = transactionValidationHelper.getWalletIfOwner(id);
 
         wallet.setName(request.getName());
         Wallet savedWallet = walletRepository.save(wallet);
@@ -104,7 +104,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     @Transactional
     public void deleteWallet(Long id) {
-        Wallet wallet = walletValidationHelper.getWalletIfOwner(id);
+        Wallet wallet = transactionValidationHelper.getWalletIfOwner(id);
 
         if (wallet.getBalance().compareTo(AppConstants.Wallet.INITIAL_BALANCE) > 0) {
             throw new WalletNotEmptyException(WALLET_NON_EMPTY);

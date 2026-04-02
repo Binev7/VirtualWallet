@@ -17,7 +17,7 @@ import com.portfolio.virtualwallet.repository.specification.AdminTransactionSpec
 import com.portfolio.virtualwallet.repository.specification.TransactionSpecification;
 import com.portfolio.virtualwallet.service.interfaces.TransactionService;
 import com.portfolio.virtualwallet.utils.TransactionHelper;
-import com.portfolio.virtualwallet.utils.WalletValidationHelper;
+import com.portfolio.virtualwallet.utils.TransactionValidationHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -41,7 +41,7 @@ import static com.portfolio.virtualwallet.utils.AppConstants.SuccessMessages.TRA
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
 
-    private final WalletValidationHelper validationHelper;
+    private final TransactionValidationHelper validationHelper;
     private final TransactionHelper transactionHelper;
     private final TransactionMapper transactionMapper;
     private final ApplicationEventPublisher eventPublisher;

@@ -2,7 +2,7 @@ package com.portfolio.virtualwallet.entity.dto.constants;
 
 import lombok.experimental.UtilityClass;
 
-@UtilityClass
+/*@UtilityClass
 public class CardValidationMessages {
 
     public static final String CARD_NUMBER_NOT_BLANK = "Card number cannot be empty.";
@@ -16,4 +16,4 @@ public class CardValidationMessages {
 
     public static final String CHECK_NUMBER_NOT_BLANK = "Check number (CVV) cannot be empty.";
     public static final String CHECK_NUMBER_PATTERN = "Check number must be exactly 3 digits.";
-}
+}*/
