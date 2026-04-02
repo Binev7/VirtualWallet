@@ -6,7 +6,8 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
-import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.*;
+import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.Transaction.*;
+import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.Card.CARD_ID_NOT_NULL;
 
 @Data
 public class WithdrawalRequestDto {

@@ -6,7 +6,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
-import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.*;
+import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.Transaction.*;
 
 @Data
 public class TransferRequestDto {

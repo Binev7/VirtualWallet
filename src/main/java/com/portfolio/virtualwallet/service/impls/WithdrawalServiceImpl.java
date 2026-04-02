@@ -11,7 +11,7 @@ import com.portfolio.virtualwallet.integration.bank.BankingGatewayClient;
 import com.portfolio.virtualwallet.mapper.TransactionMapper;
 import com.portfolio.virtualwallet.repository.TransactionRepository;
 import com.portfolio.virtualwallet.service.interfaces.WithdrawalService;
-import com.portfolio.virtualwallet.utils.WalletValidationHelper;
+import com.portfolio.virtualwallet.utils.TransactionValidationHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,7 @@ import static com.portfolio.virtualwallet.utils.AppConstants.SuccessMessages.WIT
 @RequiredArgsConstructor
 public class WithdrawalServiceImpl implements WithdrawalService {
 
-    private final WalletValidationHelper validationHelper;
+    private final TransactionValidationHelper validationHelper;
     private final BankingGatewayClient bankingClient;
     private final TransactionMapper transactionMapper;
     private final TransactionRepository transactionRepository;

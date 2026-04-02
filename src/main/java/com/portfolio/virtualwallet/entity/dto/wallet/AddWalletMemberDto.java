@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.*;
+import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.User.*;
 
 @Data
 public class AddWalletMemberDto {

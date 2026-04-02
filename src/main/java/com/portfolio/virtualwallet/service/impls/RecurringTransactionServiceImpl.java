@@ -10,7 +10,7 @@ import com.portfolio.virtualwallet.mapper.TransactionMapper;
 import com.portfolio.virtualwallet.repository.RecurringTransactionRepository;
 import com.portfolio.virtualwallet.service.interfaces.RecurringTransactionService;
 import com.portfolio.virtualwallet.utils.TransactionHelper;
-import com.portfolio.virtualwallet.utils.WalletValidationHelper;
+import com.portfolio.virtualwallet.utils.TransactionValidationHelper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ import static com.portfolio.virtualwallet.exception.ExceptionMessages.Transactio
 public class RecurringTransactionServiceImpl implements RecurringTransactionService {
 
     private final RecurringTransactionRepository recurringRepository;
-    private final WalletValidationHelper validationHelper;
+    private final TransactionValidationHelper validationHelper;
     private final TransactionMapper transactionMapper;
     private final TransactionHelper transactionHelper;
 

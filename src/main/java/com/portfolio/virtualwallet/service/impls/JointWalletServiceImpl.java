@@ -13,7 +13,7 @@ import com.portfolio.virtualwallet.mapper.WalletMapper;
 import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.repository.WalletMembershipRepository;
 import com.portfolio.virtualwallet.service.interfaces.JointWalletService;
-import com.portfolio.virtualwallet.utils.WalletValidationHelper;
+import com.portfolio.virtualwallet.utils.TransactionValidationHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,13 +30,13 @@ public class JointWalletServiceImpl implements JointWalletService {
     private final WalletMembershipRepository walletMembershipRepository;
     private final UserRepository userRepository;
     private final WalletMapper walletMapper;
-    private final WalletValidationHelper walletValidationHelper;
+    private final TransactionValidationHelper transactionValidationHelper;
 
 
     @Override
     @Transactional(readOnly = true)
     public List<WalletMemberDto> getWalletMembers(Long walletId) {
-        walletValidationHelper.getWalletIfOwner(walletId);
+        transactionValidationHelper.getWalletIfOwner(walletId);
 
         return walletMembershipRepository.findAllByWalletId(walletId)
                 .stream()
@@ -47,7 +47,7 @@ public class JointWalletServiceImpl implements JointWalletService {
     @Override
     @Transactional
     public void addMemberToJointWallet(Long walletId, AddWalletMemberDto request) {
-        Wallet wallet = walletValidationHelper.getWalletIfOwner(walletId);
+        Wallet wallet = transactionValidationHelper.getWalletIfOwner(walletId);
 
         if (!wallet.isJoint()) {
             throw new UnauthorizedException(WALLET_NOT_JOINT);
@@ -70,7 +70,7 @@ public class JointWalletServiceImpl implements JointWalletService {
     @Override
     @Transactional
     public void removeMemberFromJointWallet(Long walletId, Long targetUserId) {
-        Wallet wallet = walletValidationHelper.getWalletIfOwner(walletId);
+        Wallet wallet = transactionValidationHelper.getWalletIfOwner(walletId);
 
         if (wallet.getOwner().getId().equals(targetUserId)) {
             throw new UnauthorizedException(WALLET_CANNOT_REMOVE_OWNER);
@@ -86,7 +86,7 @@ public class JointWalletServiceImpl implements JointWalletService {
     @Override
     @Transactional
     public void updateMemberRights(Long walletId, Long targetUserId, UpdateWalletMemberRightsDto request) {
-        Wallet wallet = walletValidationHelper.getWalletIfOwner(walletId);
+        Wallet wallet = transactionValidationHelper.getWalletIfOwner(walletId);
 
         if (wallet.getOwner().getId().equals(targetUserId)) {
             throw new UnauthorizedException(WALLET_CANNOT_MODIFY_OWNER_RIGHTS);

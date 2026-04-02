@@ -4,8 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.OTP_CODE_NOT_BLANK;
-import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.TRANSACTION_ID_NOT_NULL;
+import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.Transaction.*;
 
 @Data
 public class OtpVerificationRequestDto {
