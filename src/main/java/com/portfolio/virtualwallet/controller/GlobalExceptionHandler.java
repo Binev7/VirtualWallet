@@ -2,6 +2,7 @@ package com.portfolio.virtualwallet.controller;
 
 import com.portfolio.virtualwallet.entity.dto.error.ApiErrorResponseDto;
 import com.portfolio.virtualwallet.exception.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +52,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorResponseDto> handleGeneralException(Exception ex) {
+    public ResponseEntity<ApiErrorResponseDto> handleGeneralException(Exception ex, HttpServletRequest request) throws Exception {
+        String uri = request.getRequestURI();
+
+        if (uri.contains("api-docs") || uri.contains("swagger")) {
+            throw ex;
+        }
+
         log.error(UNEXPECTED_ERROR_LOG, ex.getMessage(), ex);
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, UNEXPECTED_ERROR);
     }
