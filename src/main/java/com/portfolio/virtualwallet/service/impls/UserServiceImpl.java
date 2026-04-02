@@ -32,8 +32,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
-    // Нови зависимости за смяната на имейла
     private final VerificationTokenRepository tokenRepository;
     private final ApplicationEventPublisher eventPublisher;
 
