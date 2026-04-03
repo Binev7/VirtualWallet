@@ -3,10 +3,17 @@ package com.portfolio.virtualwallet.entity.dto.auth;
 import com.portfolio.virtualwallet.entity.dto.validation.PasswordsMatch;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.Auth.*;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @PasswordsMatch(message = PASSWORDS_DO_NOT_MATCH)
 public class ResetPasswordDto {
 
