@@ -3,13 +3,19 @@ package com.portfolio.virtualwallet.entity.dto.transaction;
 import com.portfolio.virtualwallet.entity.enums.RecurringInterval;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.Transaction.*;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RecurringTransactionRequestDto {
 
     @NotNull(message = SENDER_WALLET_ID_NOT_NULL)

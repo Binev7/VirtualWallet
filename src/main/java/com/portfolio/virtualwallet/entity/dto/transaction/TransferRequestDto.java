@@ -2,13 +2,19 @@ package com.portfolio.virtualwallet.entity.dto.transaction;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.Transaction.*;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class TransferRequestDto {
 
     @NotNull(message = SENDER_WALLET_ID_NOT_NULL)
