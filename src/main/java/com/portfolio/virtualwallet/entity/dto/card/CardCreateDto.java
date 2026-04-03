@@ -5,13 +5,19 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.Card.*;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CardCreateDto {
 
     @NotBlank(message = CARD_NUMBER_NOT_BLANK)
