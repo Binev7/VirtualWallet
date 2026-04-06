@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - Virtual Wallet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { primary: '#4A148C', secondary: '#7B1FA2' } } }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 font-sans antialiased text-gray-900 flex items-center justify-center min-h-screen">
+
+<main class="w-full max-w-md bg-white min-h-screen p-8 shadow-xl flex flex-col justify-center relative">
+
+    <a th:href="@{/}" class="absolute top-6 left-6 text-gray-400 hover:text-gray-800">
+        <i class="fas fa-arrow-left text-xl"></i>
+    </a>
+
+    <div class="text-center mb-10 mt-10">
+        <div class="bg-primary w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <i class="fas fa-wallet text-white text-3xl"></i>
+        </div>
+        <h1 class="text-3xl font-bold text-gray-800">Welcome back!</h1>
+        <p class="text-gray-500 mt-2">Please enter your details to sign in.</p>
+    </div>
+
+    <div th:if="${param.error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span class="block sm:inline">Грешно име или парола!</span>
+    </div>
+
+    <div th:if="${successMessage}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 text-sm text-center">
+        <span th:text="${successMessage}">Успех!</span>
+    </div>
+
+    <form th:action="@{/login}" method="post" class="space-y-6">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="far fa-user text-gray-400"></i>
+                </div>
+                <input type="text" name="email" required
+                       class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-lock text-gray-400"></i>
+                </div>
+                <input type="password" name="password" required
+                       class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition">
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <input type="checkbox" id="remember-me" name="remember-me" class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                <label for="remember-me" class="ml-2 block text-sm text-gray-700">Remember me</label>
+            </div>
+            <div class="text-sm">
+                <a th:href="@{/forgot-password}" class="font-medium text-primary hover:text-secondary">Forgot password?</a>
+            </div>
+        </div>
+
+        <button type="submit"
+                class="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+            Login
+        </button>
+    </form>
+
+    <p class="mt-8 text-center text-sm text-gray-600">
+        Don't have an account?
+        <a th:href="@{/register}" class="font-medium text-primary hover:text-secondary">Register now</a>
+    </p>
+</main>
+</body>
+</html>
