@@ -1,8 +1,11 @@
 package com.portfolio.virtualwallet.security;
 
+import com.portfolio.virtualwallet.controller.mvc.WebAuthController;
+import com.portfolio.virtualwallet.controller.mvc.constants.MvcConstants;
 import com.portfolio.virtualwallet.security.constants.SecurityConstants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.NonNull;
@@ -35,15 +38,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         final String authHeader = request.getHeader(SecurityConstants.AUTHORIZATION_HEADER);
-        final String jwt;
+        String jwt = null;
         final String username;
 
-        if (authHeader == null || !authHeader.startsWith(SecurityConstants.BEARER_PREFIX)) {
+        if (authHeader != null && authHeader.startsWith(SecurityConstants.BEARER_PREFIX)) {
+            jwt = authHeader.substring(SecurityConstants.BEARER_PREFIX_LENGTH);
+        }
+        else if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (MvcConstants.Cookies.JWT_COOKIE_NAME.equals(cookie.getName())) {
+                    jwt = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (jwt == null) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(SecurityConstants.BEARER_PREFIX_LENGTH);
         username = jwtService.extractUsername(jwt);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -57,10 +71,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         userDetails.getAuthorities()
                 );
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
+
         filterChain.doFilter(request, response);
     }
 }
