@@ -10,12 +10,17 @@ public final class MvcConstants {
         public static final String FORGOT_PASSWORD = "auth/forgot-password";
         public static final String RESET_PASSWORD = "auth/reset-password";
         public static final String REDIRECT_HOME = "redirect:/";
+        public static final String DASHBOARD_INDEX = "dashboard/index";
     }
 
     public static final class Attributes {
         public static final String ERROR = "error";
         public static final String SUCCESS_MESSAGE = "successMessage";
         public static final String TOKEN = "token";
+        public static final String CURRENT_USER = "currentUser";
+        public static final String WALLET = "wallet";
+        public static final String CARD = "card";
+        public static final String RECENT_TRANSACTIONS = "recentTransactions";
     }
 
     public static final class Messages {
@@ -30,6 +35,6 @@ public final class MvcConstants {
         public static final String JWT_COOKIE_NAME = "jwt_token";
         public static final String PATH = "/";
         public static final String SAME_SITE_STRICT = "Strict";
-        public static final long MAX_AGE_SECONDS = 3600; // 1 час (60 * 60)
+        public static final long MAX_AGE_SECONDS = 3600;
     }
 }
