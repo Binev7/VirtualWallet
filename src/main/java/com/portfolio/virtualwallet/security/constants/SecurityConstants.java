@@ -20,6 +20,13 @@ public class SecurityConstants {
             "/configuration/security",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/error"
+            "/error",
+            "/",
+            "/login",
+            "/register",
+            "/css/**",
+            "/js/**",
+            "/images/**",
+            "/webjars/**"
     };
 }

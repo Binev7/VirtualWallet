@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout/base}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Начало - Virtual Wallet</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4A148C',
+                        secondary: '#7B1FA2'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+<main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl">
+
+    <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center gap-3">
+            <img src="https://ui-avatars.com/api/?name=Admiral+Sky&background=4A148C&color=fff" alt="User" class="w-12 h-12 rounded-full border-2 border-white shadow-sm">            <div>
+                <p class="text-xs text-gray-500">Welcome back!</p>
+                <h1 class="text-lg font-bold" th:text="${currentUser.username}">Admiral Sky</h1>
+            </div>
+        </div>
+        <button class="bg-white p-2 rounded-full shadow-sm relative">
+            <i class="far fa-bell text-gray-600"></i>
+            <span class="absolute top-1 right-1 bg-red-500 w-2 h-2 rounded-full"></span>
+        </button>
+    </div>
+
+    <div class="bg-gradient-to-r from-[#4A148C] to-[#7B1FA2] rounded-3xl p-6 text-white shadow-lg mb-6 relative overflow-hidden">
+        <div class="absolute -right-6 -top-6 w-32 h-32 bg-white opacity-10 rounded-full"></div>
+
+        <p class="text-sm opacity-80 mb-1">Balance</p>
+        <h2 class="text-3xl font-bold mb-6">$ <span th:text="${#numbers.formatDecimal(wallet.balance, 1, 'COMMA', 2, 'POINT')}">321.00</span></h2>
+
+        <div class="flex justify-between items-end">
+            <p class="text-sm tracking-widest opacity-80">**** **** **** <span th:text="${#strings.substring(card.cardNumber, 12)}">4321</span></p>
+            <div class="font-bold text-xl italic">VISA</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-4 gap-4 mb-8">
+        <a th:href="@{/deposit}" class="flex flex-col items-center gap-2">
+            <div class="bg-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm text-gray-600 hover:bg-[#4A148C] hover:text-white transition-colors">
+                <i class="fas fa-plus"></i>
+            </div>
+            <span class="text-xs font-medium">Top Up</span>
+        </a>
+        <a th:href="@{/transfer}" class="flex flex-col items-center gap-2">
+            <div class="bg-white w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm text-gray-600 hover:bg-[#4A148C] hover:text-white transition-colors">
+                <i class="fas fa-arrow-up"></i>
+            </div>
+            <span class="text-xs font-medium">Transfer</span>
+        </a>
+    </div>
+
+    <div>
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-bold text-lg">History Transaction</h3>
+            <a th:href="@{/history}" class="text-sm text-[#4A148C] font-semibold">See All</a>
+        </div>
+
+        <div class="space-y-4">
+            <div th:each="tx : ${recentTransactions}" class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                         th:classappend="${tx.amount > 0 ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'}">
+                        <i class="fas" th:classappend="${tx.amount > 0 ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500" th:text="${#temporals.format(tx.createdAt, 'dd MMMM yyyy')}">11 October 2023</p>
+                    </div>
+                </div>
+                <div class="font-bold"
+                     th:classappend="${tx.amount > 0 ? 'text-green-500' : 'text-gray-800'}"
+                     th:text="${tx.amount > 0 ? '+$' + tx.amount : '-$' + Math.abs(tx.amount)}">
+                    -$15.00
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+</body>
+</html>
