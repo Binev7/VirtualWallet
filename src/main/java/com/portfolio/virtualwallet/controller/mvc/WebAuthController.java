@@ -29,13 +29,13 @@ public class WebAuthController {
 
     @PostMapping("/login")
     public String handleLogin(
-            @RequestParam String username,
+            @RequestParam String email,
             @RequestParam String password,
             HttpServletResponse response,
             Model model) {
 
         try {
-            UserLoginDto loginDto = new UserLoginDto(username, password);
+            UserLoginDto loginDto = new UserLoginDto(email, password);
             String token = authenticationService.login(loginDto).getToken();
 
             ResponseCookie jwtCookie = ResponseCookie.from(MvcConstants.Cookies.JWT_COOKIE_NAME, token)
