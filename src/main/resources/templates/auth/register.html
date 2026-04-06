@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - Virtual Wallet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>tailwind.config = { theme: { extend: { colors: { primary: '#4A148C', secondary: '#7B1FA2' } } } }</script>
+</head>
+<body class="bg-gray-100 font-sans antialiased text-gray-900 flex items-center justify-center min-h-screen">
+<main class="w-full max-w-md bg-white min-h-screen p-8 shadow-xl flex flex-col justify-center relative">
+    <a th:href="@{/login}" class="absolute top-6 left-6 text-gray-400 hover:text-gray-800"><i class="fas fa-arrow-left text-xl"></i></a>
+
+    <div class="text-center mb-8 mt-8">
+        <h1 class="text-3xl font-bold text-gray-800">Create Account</h1>
+        <p class="text-gray-500 mt-2">Join Virtual Wallet today.</p>
+    </div>
+
+    <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+        <span class="block sm:inline" th:text="${error}">Грешка</span>
+    </div>
+
+    <form th:action="@{/register}" method="post" class="space-y-4">
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <input type="text" name="username" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent transition">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" name="email" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent transition">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+            <input type="text" name="phoneNumber" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent transition">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" name="password" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent transition">
+        </div>
+
+        <button type="submit" class="w-full mt-4 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-full shadow-lg hover:shadow-xl transition-all">
+            Register
+        </button>
+    </form>
+
+    <p class="mt-8 text-center text-sm text-gray-600">
+        Already have an account?
+        <a th:href="@{/login}" class="font-medium text-primary hover:text-secondary">Log in</a>
+    </p>
+</main>
+</body>
+</html>
