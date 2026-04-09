@@ -104,7 +104,7 @@ public class WebAuthController {
     }
 
     @GetMapping("/reset-password")
-    public String showResetPasswordPage(@RequestParam("token") String token, Model model) {
+    public String showResetPasswordPage(@RequestParam(MvcConstants.Attributes.TOKEN) String token, Model model) {
         model.addAttribute(MvcConstants.Attributes.TOKEN, token);
         return MvcConstants.Views.RESET_PASSWORD;
     }
