@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout/base}">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+
+<main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
+
+    <div class="flex items-center mb-8 mt-2">
+        <a th:href="@{/}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="text-xl font-bold ml-4">My Cards</h1>
+    </div>
+
+    <div th:replace="~{fragments/alerts :: success}"></div>
+    <div th:replace="~{fragments/alerts :: error}"></div>
+
+    <div class="space-y-4 mb-8">
+
+        <div th:if="${cards == null or cards.isEmpty()}" class="text-center text-gray-500 py-10 bg-white rounded-3xl shadow-sm border border-gray-100">
+            <i class="fas fa-credit-card text-4xl mb-3 opacity-30"></i>
+            <p class="text-sm font-medium">No cards linked yet.</p>
+            <p class="text-xs opacity-70 mt-1">Add a card to start making deposits.</p>
+        </div>
+
+        <div th:each="c : ${cards}" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between group">
+
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center border border-gray-100">
+                    <i class="fab fa-cc-visa text-2xl text-[#4A148C]"></i>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-800 text-sm uppercase" th:text="${c.cardHolder}">JOHN DOE</p>
+                    <p class="text-xs text-gray-500 font-mono tracking-widest mt-1">**** **** **** <span th:text="${c.maskedCardNumber}">1234</span></p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 border-l border-gray-100 pl-4">
+                <a th:href="@{/cards/{id}/edit(id=${c.id})}" class="text-gray-400 hover:text-[#4A148C] transition p-2">
+                    <i class="fas fa-pen text-sm"></i>
+                </a>
+
+                <form th:action="@{/cards/{id}/delete(id=${c.id})}" method="post" onsubmit="return confirm('Are you sure you want to remove this card?');">
+                    <button type="submit" class="text-gray-400 hover:text-red-500 transition p-2">
+                        <i class="fas fa-trash-alt text-sm"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <a th:href="@{/cards/add}" class="w-full bg-[#4A148C] text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 relative overflow-hidden">
+        <i class="fas fa-plus"></i>
+        <span>Add New Card</span>
+        <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-[#7B1FA2] to-[#4A148C] opacity-0 hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+    </a>
+
+</main>
+</body>
+</html>

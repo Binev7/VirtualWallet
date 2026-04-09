@@ -41,6 +41,11 @@ public class HomeController {
         model.addAttribute(MvcConstants.Attributes.CURRENT_USER, currentUser);
 
         List<WalletResponseDto> wallets = walletService.getMyWallets();
+        List<CardResponseDto> cards = cardService.getAllMyCards();
+
+        model.addAttribute(MvcConstants.Attributes.WALLETS, wallets);
+        model.addAttribute(MvcConstants.Attributes.CARDS, cards);
+
         WalletResponseDto primaryWallet = null;
 
         if (!wallets.isEmpty()) {
@@ -48,29 +53,23 @@ public class HomeController {
             model.addAttribute(MvcConstants.Attributes.WALLET, primaryWallet);
         }
 
-        List<CardResponseDto> cards = cardService.getAllMyCards();
         if (!cards.isEmpty()) {
             model.addAttribute(MvcConstants.Attributes.CARD, cards.get(0));
         }
 
-        List<TransactionHistoryDto> recentTransactions = Collections.emptyList();
+        List<List<TransactionHistoryDto>> allRecentTransactions = new java.util.ArrayList<>();
 
-        if (primaryWallet != null) {
+        for (WalletResponseDto wallet : wallets) {
             Page<TransactionHistoryDto> transactionsPage = transactionService.getWalletHistory(
                     currentUser,
-                    primaryWallet.getId(),
-                    null,
-                    null,
-                    null,
-                    null,
-                    0,
-                    5
+                    wallet.getId(),
+                    null, null, null, null,
+                    0, 5
             );
-
-            recentTransactions = transactionsPage.getContent();
+            allRecentTransactions.add(transactionsPage.getContent());
         }
 
-        model.addAttribute(MvcConstants.Attributes.RECENT_TRANSACTIONS, recentTransactions);
+        model.addAttribute(MvcConstants.Attributes.ALL_RECENT_TRANSACTIONS, allRecentTransactions);
 
         return MvcConstants.Views.DASHBOARD_INDEX;
     }

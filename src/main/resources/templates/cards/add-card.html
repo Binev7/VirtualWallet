@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout/base}">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+
+<main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
+
+    <div class="flex items-center mb-8 mt-2">
+        <a th:href="@{/}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="text-xl font-bold ml-4">Add New Card</h1>
+    </div>
+
+    <div th:replace="~{fragments/alerts :: success}"></div>
+    <div th:replace="~{fragments/alerts :: error}"></div>
+
+    <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl p-6 text-white shadow-lg mb-8 relative overflow-hidden h-48 flex flex-col justify-between">
+        <div class="absolute -right-6 -top-6 w-32 h-32 bg-white opacity-5 rounded-full"></div>
+        <div class="flex justify-between items-center">
+            <i class="fas fa-microchip text-3xl text-yellow-400 opacity-80"></i>
+            <i class="fab fa-cc-visa text-4xl opacity-80"></i>
+        </div>
+        <div>
+            <p class="text-sm tracking-widest opacity-80 mb-1">Card Number</p>
+            <p class="text-xl tracking-widest font-mono">**** **** **** ****</p>
+        </div>
+    </div>
+
+    <form th:action="@{/cards/add}" th:object="${card}" method="post" class="space-y-5 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+
+        <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Card Holder Name</label>
+            <input type="text" th:field="*{cardHolder}" required placeholder="John Doe"
+                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#4A148C] focus:border-transparent transition bg-gray-50">
+        </div>
+
+        <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Card Number</label>
+            <input type="text" th:field="*{cardNumber}" required placeholder="0000 0000 0000 0000"
+                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#4A148C] focus:border-transparent transition bg-gray-50 font-mono">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Expiry Date</label>
+                <input type="date" th:field="*{expirationDate}" required
+                       class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#4A148C] focus:border-transparent transition bg-gray-50">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">CVV</label>
+                <input type="password" th:field="*{checkNumber}" maxlength="3" required placeholder="***"
+                       class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#4A148C] focus:border-transparent transition bg-gray-50 text-center font-mono tracking-widest">
+            </div>
+        </div>
+
+        <button type="submit" class="w-full mt-6 bg-[#4A148C] text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all">
+            Save Card
+        </button>
+    </form>
+
+</main>
+</body>
+</html>
