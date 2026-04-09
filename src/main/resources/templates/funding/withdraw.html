@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout/base}">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+
+<main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
+
+    <div class="flex items-center mb-8 mt-2">
+        <a th:href="@{/}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="text-xl font-bold ml-4">Withdraw Funds</h1>
+    </div>
+
+    <div th:replace="~{fragments/alerts :: success}"></div>
+    <div th:replace="~{fragments/alerts :: error}"></div>
+
+    <form th:action="@{/withdraw}" th:object="${withdrawalRequest}" method="post" class="space-y-6">
+
+        <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center relative">
+            <p class="text-gray-400 text-sm font-medium mb-2">Amount to Withdraw</p>
+            <div class="flex justify-center items-center text-4xl font-bold text-gray-800">
+                <span class="mr-2 text-3xl opacity-70">$</span>
+                <input type="number" step="0.01" th:field="*{amount}" required placeholder="0.00"
+                       class="w-32 bg-transparent border-none focus:ring-0 p-0 text-center placeholder-gray-300">
+            </div>
+            <div class="w-full h-px bg-gray-100 mt-6 absolute bottom-0 left-0"></div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">From Wallet</label>
+            <div class="relative">
+                <select th:field="*{walletId}" required class="w-full appearance-none px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-800 outline-none">
+                    <option th:each="w : ${wallets}" th:value="${w.id}" th:text="${w.name} + ' (Available: $' + ${w.balance} + ')'"></option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">To Bank Card</label>
+            <div class="relative">
+                <select th:field="*{cardId}" required class="w-full appearance-none px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-800 outline-none">
+                    <option value="" disabled selected>Select destination card</option>
+                    <option th:each="c : ${cards}" th:value="${c.id}" th:text="'VISA ' + ${c.maskedCardNumber}"></option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="w-full bg-gray-800 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:bg-gray-900 transition-all mt-4 relative overflow-hidden">
+            Confirm Withdrawal
+        </button>
+    </form>
+
+</main>
+</body>
+</html>
