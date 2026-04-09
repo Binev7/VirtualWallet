@@ -4,9 +4,9 @@
 <div th:fragment="mobile-nav"
      class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white rounded-t-3xl shadow-[0_-5px_15px_rgba(0,0,0,0.05)] px-6 py-3 z-50">
     <ul class="flex justify-between items-center text-gray-400">
-        <li class="flex flex-col items-center cursor-pointer text-[#4A148C]">
+        <a th:href="@{/}" class="flex flex-col items-center justify-center text-gray-400 hover:text-[#4A148C]">
             <i class="fas fa-home text-xl mb-1"></i>
-        </li>
+        </a>
         <li class="flex flex-col items-center cursor-pointer hover:text-[#4A148C] transition-colors">
             <i class="fas fa-file-invoice-dollar text-xl mb-1"></i>
         </li>
@@ -16,7 +16,9 @@
             </div>
         </li>
         <li class="flex flex-col items-center cursor-pointer hover:text-[#4A148C] transition-colors">
-            <i class="fas fa-credit-card text-xl mb-1"></i>
+            <a th:href="@{/cards}" class="flex flex-col items-center ...">
+                <i class="fas fa-credit-card text-xl"></i>
+            </a>
         </li>
         <li class="flex flex-col items-center cursor-pointer hover:text-[#4A148C] transition-colors">
             <i class="fas fa-user text-xl mb-1"></i>
