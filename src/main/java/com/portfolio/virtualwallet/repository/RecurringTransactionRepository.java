@@ -1,6 +1,7 @@
 package com.portfolio.virtualwallet.repository;
 
 import com.portfolio.virtualwallet.entity.RecurringTransaction;
+import com.portfolio.virtualwallet.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +18,7 @@ public interface RecurringTransactionRepository extends JpaRepository<RecurringT
 
     @Query("SELECT rt FROM RecurringTransaction rt WHERE rt.senderWallet.id = :walletId AND rt.isActive = true")
     List<RecurringTransaction> findActiveSubscriptionsByWallet(@Param("walletId") Long walletId);
+
+    @Query("SELECT rt FROM RecurringTransaction rt WHERE rt.senderWallet.owner = :user AND rt.isActive = true")
+    List<RecurringTransaction> findAllActiveByUser(@Param("user") User user);
 }
