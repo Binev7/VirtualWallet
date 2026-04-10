@@ -29,23 +29,23 @@ public final class AppConstants {
     @UtilityClass
     public class Email {
         public static final String VERIFICATION_SUBJECT = "Verify Your Virtual Wallet Account";
-        public static final String VERIFICATION_TEMPLATE = "verification-email";
+        public static final String VERIFICATION_TEMPLATE = "emails/verification-email";
         public static final String URL_VARIABLE = "confirmationUrl";
         public static final String OTP_SUBJECT = "Action Required: Verify Your Transaction";
-        public static final String OTP_TEMPLATE = "otp-email";
+        public static final String OTP_TEMPLATE = "emails/otp-email";
         public static final String OTP_VARIABLE = "otpCode";
         public static final String TRANSACTION_SUCCESS_SUBJECT = "Transaction Successful - Virtual Wallet";
-        public static final String TRANSACTION_SUCCESS_TEMPLATE = "transaction-success-email";
+        public static final String TRANSACTION_SUCCESS_TEMPLATE = "emails/transaction-success-email";
         public static final String RECEIVED_MONEY_SUBJECT = "You've Received Money!";
-        public static final String RECEIVED_MONEY_TEMPLATE = "received-money-email";
+        public static final String RECEIVED_MONEY_TEMPLATE = "emails/received-money-email";
         public static final String AMOUNT_VARIABLE = "amount";
         public static final String RECIPIENT_VARIABLE = "recipient";
         public static final String SENDER_VARIABLE = "sender";
         public static final String RECURRING_FAILED_SUBJECT = "Action Required: Recurring Transaction Failed";
-        public static final String RECURRING_FAILED_TEMPLATE = "recurring-failed-email";
+        public static final String RECURRING_FAILED_TEMPLATE = "emails/recurring-failed-email";
         public static final String REASON_VARIABLE = "reason";
         public static final String PASSWORD_RESET_SUBJECT = "Password Reset Request";
-        public static final String PASSWORD_RESET_TEMPLATE = "reset-password-email";
+        public static final String PASSWORD_RESET_TEMPLATE = "emails/reset-password-email";
         public static final String RESET_TOKEN_VARIABLE = "resetToken";
         public static final String USERNAME_VARIABLE = "username";
     }

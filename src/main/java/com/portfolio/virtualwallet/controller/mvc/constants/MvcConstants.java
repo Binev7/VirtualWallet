@@ -10,6 +10,7 @@ public final class MvcConstants {
         public static final String FORGOT_PASSWORD = "auth/forgot-password";
         public static final String RESET_PASSWORD = "auth/reset-password";
         public static final String REDIRECT_HOME = "redirect:/";
+        public static final String REDIRECT_RECURRING = "redirect:/recurring";
         public static final String DASHBOARD_INDEX = "dashboard/index";
         public static final String ADD_CARD = "cards/add-card";
         public static final String TOP_UP = "funding/top-up";
@@ -17,6 +18,12 @@ public final class MvcConstants {
         public static final String EDIT_CARD = "cards/edit-card";
         public static final String REDIRECT_MY_CARDS = "redirect:/cards";
         public static final String WITHDRAW = "funding/withdraw";
+        public static final String TRANSFER_SEARCH = "transfer/search";
+        public static final String TRANSFER_FORM = "transfer/form";
+        public static final String TRANSFER_OTP = "transfer/otp";
+        public static final String RECURRING_FORM = "recurring/form";
+        public static final String RECURRING_SEARCH = "recurring/search";
+        public static final String RECURRING_LIST = "recurring/list";
     }
 
     public static final class Attributes {
@@ -32,6 +39,14 @@ public final class MvcConstants {
         public static final String DEPOSIT_REQUEST = "depositRequest";
         public static final String ALL_RECENT_TRANSACTIONS = "allRecentTransactions";
         public static final String WITHDRAWAL_REQUEST = "withdrawalRequest";
+        public static final String TRANSFER_REQUEST = "transferRequest";
+        public static final String OTP_REQUEST = "otpRequest";
+        public static final String RECEIVER_NAME = "receiverName";
+        public static final String TRANSACTION_ID = "transactionId";
+        public static final String RECURRING_REQUEST = "recurringRequest";
+        public static final String SEARCH_RESULTS = "searchResults"; // НОВО
+        public static final String QUERY = "query";
+        public static final String RECURRING_TRANSACTIONS = "recurringTransactions";
     }
 
     public static final class Messages {
@@ -45,6 +60,10 @@ public final class MvcConstants {
         public static final String CARD_UPDATED_SUCCESS = "Card successfully updated!";
         public static final String CARD_DELETED_SUCCESS = "Card successfully removed!";
         public static final String WITHDRAW_SUCCESS = "Funds successfully withdrawn to your card!";
+        public static final String TRANSFER_SUCCESS = "Transfer completed successfully!";
+        public static final String OTP_REQUIRED = "Please enter the OTP sent to your device to verify this large transaction.";
+        public static final String RECURRING_SETUP_SUCCESS = "Recurring transfer set up successfully!";
+        public static final String RECURRING_CANCELLED_SUCCESS = "Recurring transfer has been successfully cancelled.";
     }
 
     public static final class Cookies {
