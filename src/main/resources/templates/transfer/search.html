@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout/base}">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+
+<main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
+
+    <div class="flex items-center mb-6 mt-2">
+        <a th:href="@{/}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="text-xl font-bold ml-4">Send Money</h1>
+    </div>
+
+    <form th:action="@{/transfer}" method="get" class="mb-8">
+        <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <i class="fas fa-search text-gray-400"></i>
+            </div>
+            <input type="text" name="query" th:value="${query}" placeholder="Search by name, email or phone..."
+                   class="w-full pl-11 pr-4 py-4 bg-white border-none rounded-2xl shadow-sm focus:ring-2 focus:ring-[#4A148C] text-sm transition-shadow">
+            <button type="submit" class="absolute inset-y-2 right-2 bg-[#4A148C] text-white px-4 rounded-xl text-xs font-bold hover:bg-[#7B1FA2] transition">
+                Search
+            </button>
+        </div>
+    </form>
+
+    <div>
+        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wide mb-4" th:if="${query != null}">Search Results</h3>
+
+        <div th:if="${query == null or query.isEmpty()}" class="text-center py-10 opacity-50">
+            <i class="fas fa-user-friends text-4xl mb-3"></i>
+            <p class="text-sm">Find friends to send money easily.</p>
+        </div>
+
+        <div th:if="${query != null and (searchResults == null or searchResults.isEmpty())}" class="text-center py-10 opacity-50">
+            <i class="fas fa-user-slash text-4xl mb-3"></i>
+            <p class="text-sm">No users found matching "<span th:text="${query}"></span>"</p>
+        </div>
+
+        <div class="space-y-3" th:if="${searchResults != null and !searchResults.isEmpty()}">
+
+            <a th:each="user : ${searchResults}"
+               th:href="@{/transfer/new(receiverUsername=${user.username})}"
+               class="flex items-center justify-between bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-all group">
+
+                <div class="flex items-center gap-4">
+                    <img th:src="@{'https://ui-avatars.com/api/?name=' + ${user.username} + '&background=f3f4f6&color=4A148C&rounded=true'}"
+                         alt="Avatar" class="w-12 h-12 rounded-full border border-gray-100">
+
+                    <div>
+                        <p class="font-bold text-gray-800 text-lg" th:text="${user.username}">User Name</p>
+                    </div>
+                </div>
+
+                <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#4A148C] group-hover:text-white transition-colors">
+                    <i class="fas fa-chevron-right text-xs"></i>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+</main>
+</body>
+</html>
