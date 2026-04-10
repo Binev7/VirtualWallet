@@ -60,4 +60,14 @@ public class WalletMapper {
                 .isDefault(isDefault)
                 .build();
     }
+
+    public WalletResponseDto toDto(Wallet wallet) {
+        return WalletResponseDto.builder()
+                .id(wallet.getId())
+                .name(wallet.getName())
+                .balance(wallet.getBalance())
+                .isJoint(wallet.isJoint())
+                .isDefault(false)
+                .build();
+    }
 }
