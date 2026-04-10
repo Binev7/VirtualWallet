@@ -3,8 +3,6 @@ package com.portfolio.virtualwallet.repository.specification;
 import com.portfolio.virtualwallet.entity.User;
 import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.Predicate;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.portfolio.virtualwallet.utils.AppConstants.EntityFields.*;
 
@@ -23,6 +21,27 @@ public class UserSpecification {
                     cb.like(cb.lower(root.get(EMAIL)), pattern),
                     cb.like(root.get(PHONE_NUMBER), pattern)
             );
+        };
+    }
+
+    public static Specification<User> searchUsers(String searchTerm, String excludeUsername) {
+        return (root, query, cb) -> {
+
+            Predicate notMe = cb.notEqual(root.get(USERNAME), excludeUsername);
+
+            if (searchTerm == null || searchTerm.isBlank()) {
+                return notMe;
+            }
+
+            String pattern = "%" + searchTerm.toLowerCase() + "%";
+
+            Predicate searchPredicate = cb.or(
+                    cb.like(cb.lower(root.get(USERNAME)), pattern),
+                    cb.like(cb.lower(root.get(EMAIL)), pattern),
+                    cb.like(root.get(PHONE_NUMBER), pattern)
+            );
+
+            return cb.and(searchPredicate, notMe);
         };
     }
 }
