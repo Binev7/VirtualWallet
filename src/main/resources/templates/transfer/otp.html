@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout/base}">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+
+<main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
+
+    <div class="flex items-center mb-8 mt-2">
+        <a th:href="@{/transfer}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="text-xl font-bold ml-4">Security Check</h1>
+    </div>
+
+    <div th:replace="~{fragments/alerts :: error}"></div>
+
+    <div th:if="${infoMessage}" class="bg-blue-50 text-blue-600 p-4 rounded-2xl mb-6 text-sm font-medium flex items-center gap-3 border border-blue-100 shadow-sm">
+        <i class="fas fa-shield-alt text-xl"></i>
+        <span th:text="${infoMessage}"></span>
+    </div>
+
+    <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 text-center relative mb-6">
+
+        <div class="w-20 h-20 bg-gray-50 text-[#4A148C] rounded-full flex items-center justify-center text-3xl mx-auto mb-4 border border-gray-100 shadow-inner">
+            <i class="fas fa-lock"></i>
+        </div>
+
+        <h2 class="text-xl font-bold text-gray-800 mb-2">Enter Verification Code</h2>
+        <p class="text-xs text-gray-500 mb-8 leading-relaxed">To protect your account, large transfers require verification. Please check your device for the OTP code.</p>
+
+        <form th:action="@{/transfer/otp/verify}" th:object="${otpRequest}" method="post" class="space-y-6">
+
+            <input type="hidden" th:field="*{transactionId}" />
+
+            <div>
+                <input type="text" th:field="*{otpCode}" required maxlength="6" placeholder="••••••" autocomplete="one-time-code"
+                       class="w-full text-center text-4xl tracking-[0.5em] font-mono font-bold text-gray-800 bg-gray-50 border border-gray-200 rounded-xl py-4 focus:ring-2 focus:ring-[#4A148C] focus:border-transparent outline-none transition-all placeholder-gray-300">
+            </div>
+
+            <button type="submit" class="w-full bg-[#4A148C] text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl hover:bg-[#7B1FA2] transition-all mt-6 relative overflow-hidden">
+                Verify & Send Transfer
+            </button>
+        </form>
+    </div>
+
+    <div class="text-center">
+        <p class="text-xs text-gray-400">Didn't receive the code?</p>
+        <button class="text-[#4A148C] font-bold text-xs mt-1 hover:underline">Resend OTP</button>
+    </div>
+
+</main>
+</body>
+</html>

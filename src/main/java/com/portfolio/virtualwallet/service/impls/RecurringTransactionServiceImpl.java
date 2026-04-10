@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Transaction.NOT_OWNER_OF_RECURRING;
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Transaction.RECURRING_NOT_FOUND;
@@ -53,5 +54,10 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
         }
 
         recurringRepository.delete(recurringTx);
+    }
+
+    @Override
+    public List<RecurringTransaction> getUserRecurringTransfers(User currentUser) {
+        return recurringRepository.findAllActiveByUser(currentUser);
     }
 }

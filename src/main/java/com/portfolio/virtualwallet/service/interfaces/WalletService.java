@@ -16,4 +16,6 @@ public interface WalletService {
     WalletResponseDto updateWallet(Long id, WalletUpdateDto request);
 
     void deleteWallet(Long id);
+
+    List<WalletResponseDto> getUserWallets(User user);
 }

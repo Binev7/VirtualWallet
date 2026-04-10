@@ -113,4 +113,13 @@ public class WalletServiceImpl implements WalletService {
         walletMembershipRepository.deleteAllByWalletId(id);
         walletRepository.delete(wallet);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<WalletResponseDto> getUserWallets(User user) {
+        return walletRepository.findByOwner(user)
+                .stream()
+                .map(walletMapper::toDto)
+                .toList();
+    }
 }
