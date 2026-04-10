@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout/base}">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+
+<main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
+
+    <div class="flex items-center justify-between mb-8 mt-2">
+        <div class="flex items-center">
+            <a th:href="@{/}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 class="text-xl font-bold ml-4">Subscriptions</h1>
+        </div>
+        <a th:href="@{/recurring/search}" class="text-[#4A148C] hover:text-[#7B1FA2] transition">
+            <i class="fas fa-plus-circle text-2xl"></i>
+        </a>
+    </div>
+
+    <div th:if="${successMessage}" class="bg-green-50 text-green-600 p-4 rounded-2xl mb-6 text-sm font-medium border border-green-100 flex items-center gap-3">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${successMessage}">Success!</span>
+    </div>
+    <div th:if="${error}" class="bg-red-50 text-red-600 p-4 rounded-2xl mb-6 text-sm font-medium border border-red-100 flex items-center gap-3">
+        <i class="fas fa-exclamation-circle"></i>
+        <span th:text="${error}">Error!</span>
+    </div>
+
+    <div th:if="${#lists.isEmpty(recurringTransactions)}" class="text-center py-20">
+        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-300">
+            <i class="fas fa-calendar-times text-4xl"></i>
+        </div>
+        <h2 class="text-gray-500 font-medium">No active subscriptions</h2>
+        <p class="text-gray-400 text-xs mt-1">Your automated payments will appear here.</p>
+        <a th:href="@{/recurring/search}" class="inline-block mt-6 text-[#4A148C] font-bold text-sm underline">
+            Setup your first one
+        </a>
+    </div>
+
+    <div class="space-y-4" th:if="${!#lists.isEmpty(recurringTransactions)}">
+        <div th:each="rt : ${recurringTransactions}" class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 transition-all hover:shadow-md">
+
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex items-center gap-4">
+                    <img th:src="@{'https://ui-avatars.com/api/?name=' + ${rt.receiverWallet.owner.username} + '&background=f3f4f6&color=4A148C&rounded=true'}"
+                         alt="Avatar" class="w-12 h-12 rounded-full border border-gray-50">
+
+                    <div>
+                        <p class="font-bold text-gray-800" th:text="${rt.receiverWallet.owner.username}">Recipient Name</p>
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                            <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider" th:text="${rt.interval}">MONTHLY</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <p class="font-black text-[#4A148C] text-xl" th:text="'$' + ${#numbers.formatDecimal(rt.amount, 1, 2)}">$0.00</p>
+                    <p class="text-[10px] text-gray-400 mt-1">
+                        Next: <span class="font-medium text-gray-600" th:text="${#temporals.format(rt.nextExecutionTime, 'dd MMM yyyy')}">Date</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="h-px bg-gray-50 w-full mb-4"></div>
+
+            <form th:action="@{/recurring/cancel/{id}(id=${rt.id})}" method="post"
+                  th:onsubmit="return confirm('Are you sure you want to stop this automated payment to ' + [[${rt.receiverWallet.owner.username}]] + '?');">
+                <button type="submit" class="w-full py-3 rounded-xl bg-gray-50 text-red-500 text-xs font-bold hover:bg-red-50 hover:text-red-600 transition-all flex items-center justify-center gap-2">
+                    <i class="fas fa-minus-circle"></i> Cancel Subscription
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <p th:if="${!#lists.isEmpty(recurringTransactions)}" class="text-center text-[10px] text-gray-400 mt-8 px-6">
+        Subscriptions are processed automatically at 00:00 AM on the scheduled date. Make sure you have enough funds in your wallet.
+    </p>
+
+</main>
+</body>
+</html>
