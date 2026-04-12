@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout/base}">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+
+<main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
+
+    <div class="flex items-center mb-8 mt-2">
+        <a th:href="@{/wallets}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="text-xl font-bold ml-4"
+            th:text="${wallet != null} ? 'Rename Wallet' : 'New Wallet'">
+            Wallet Action
+        </h1>
+    </div>
+
+    <div class="bg-purple-50 p-6 rounded-3xl mb-8 border border-purple-100 text-center">
+        <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-[#4A148C] shadow-sm">
+            <i class="fas fa-wallet text-2xl"></i>
+        </div>
+        <h2 class="text-[#4A148C] font-bold" th:text="${wallet != null} ? 'Change Name' : 'Create a New Space'">Action Title</h2>
+        <p class="text-xs text-purple-600/70 mt-1">Organize your money better with multiple wallets.</p>
+    </div>
+
+    <form th:action="${wallet != null} ? @{/wallets/{id}/edit(id=${wallet})} : @{/wallets/new}"
+          th:object="${walletDto}"
+          method="post" class="space-y-6">
+
+        <div th:if="${#fields.hasAnyErrors()}" class="bg-red-50 text-red-600 p-4 rounded-2xl mb-6 text-sm font-medium border border-red-100">
+            <ul class="list-disc pl-5">
+                <li th:each="err : ${#fields.allErrors()}" th:text="${err}">Error</li>
+            </ul>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-3">Wallet Name</label>
+            <input type="text" th:field="*{name}" required
+                   placeholder="e.g. Savings, Daily Expenses"
+                   class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#4A148C] outline-none transition-all">
+        </div>
+
+        <div th:if="${wallet == null}" class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 mb-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-[#4A148C]">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-800">Joint Wallet</label>
+                    </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" th:field="*{joint}" class="sr-only peer">
+                    <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:bg-[#4A148C]"></div>
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="w-full bg-[#4A148C] text-white font-bold py-4 rounded-xl shadow-lg">
+            <span th:text="${wallet != null} ? 'Update Name' : 'Create Wallet'">Action</span>
+        </button>
+    </form>
+
+    <p class="text-center text-[10px] text-gray-400 mt-10 px-10">
+        By continuing, you can start managing your expenses separately or invite friends to a joint wallet later.
+    </p>
+
+</main>
+</body>
+</html>

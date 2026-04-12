@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout/base}">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+
+<main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
+
+    <div class="flex items-center mb-8 mt-2">
+        <a th:href="@{/wallets}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="text-xl font-bold ml-4">Wallet Members</h1>
+    </div>
+
+    <div th:replace="~{fragments/alerts :: success}"></div>
+    <div th:replace="~{fragments/alerts :: error}"></div>
+
+    <div th:if="${isOwner}" class="bg-white p-5 rounded-2xl shadow-sm mb-6 border border-gray-100">
+        <h3 class="text-sm font-bold mb-4">Add New Member</h3>
+        <form th:action="@{/wallets/{id}/members/add(id=${wallet})}" th:object="${addMemberRequest}" method="post" class="space-y-4">
+
+            <div th:if="${#fields.hasAnyErrors()}" class="text-red-500 text-xs mb-2">
+                <ul><li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li></ul>
+            </div>
+
+            <input type="email" th:field="*{userEmail}" required placeholder="Member Email"
+                   class="w-full p-3 bg-gray-50 border border-gray-100 rounded-xl outline-none focus:ring-2 focus:ring-[#4A148C] transition-all">
+
+            <label class="flex items-center gap-2 cursor-pointer group">
+                <input type="checkbox" th:field="*{canSpend}" class="w-4 h-4 rounded accent-[#4A148C]">
+                <span class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Allow this member to spend money</span>
+            </label>
+
+            <button type="submit" class="w-full bg-[#4A148C] text-white py-3 rounded-xl font-bold hover:bg-[#7B1FA2] shadow-md transition-all">
+                Add Member
+            </button>
+        </form>
+    </div>
+
+    <div class="space-y-3">
+        <div th:each="m : ${members}" class="bg-white p-4 rounded-2xl flex justify-between items-center border border-gray-50 shadow-sm">
+
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-[#4A148C] font-bold text-xs border border-gray-50">
+                    <span th:text="${#strings.substring(m.username, 0, 1).toUpperCase()}">U</span>
+                </div>
+
+                <div>
+                    <div class="flex items-center gap-2">
+                        <p class="font-bold text-gray-800 text-sm" th:text="${m.username}">Username</p>
+                        <span th:if="${m.username == currentUsername}" class="text-[9px] bg-purple-100 text-[#4A148C] px-1.5 py-0.5 rounded font-black uppercase">You</span>
+                    </div>
+
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <p th:if="${m.isOwner}" class="text-[10px] text-amber-600 font-bold uppercase tracking-wider">
+                            <i class="fas fa-crown text-[8px] mr-0.5"></i> Owner
+                        </p>
+                        <p th:if="${!m.isOwner and !isOwner}" class="text-[10px] text-gray-400 font-medium uppercase tracking-wider"
+                           th:text="${m.canSpend ? 'Can Spend' : 'View Only'}">
+                        </p>
+
+                        <form th:if="${!m.isOwner and isOwner}"
+                              th:action="@{/wallets/{wid}/members/{uid}/update(wid=${wallet}, uid=${m.userId})}"
+                              method="post" class="flex items-center gap-2 mt-0.5">
+
+                            <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wider"
+                               th:text="${m.canSpend ? 'Can Spend' : 'View Only'}"></p>
+
+                            <label class="relative inline-flex items-center cursor-pointer ml-1">
+                                <input type="checkbox" name="canSpend" value="true" th:checked="${m.canSpend}"
+                                       class="sr-only peer" onchange="this.form.submit()">
+
+                                <div class="w-7 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[#4A148C]"></div>
+                            </label>
+
+                            <input type="hidden" name="canAddMoney" th:value="${m.canAddMoney}" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <form th:if="${isOwner and m.username != currentUsername}"
+                  th:action="@{/wallets/{wid}/members/{uid}/delete(wid=${wallet}, uid=${m.userId})}"
+                  method="post"
+                  th:onsubmit="return confirm('Are you sure you want to remove ' + [[${m.username}]] + ' from this wallet?');">
+
+                <button type="submit" class="w-9 h-9 flex items-center justify-center text-red-400 hover:bg-red-50 hover:text-red-600 rounded-full transition-all">
+                    <i class="fas fa-user-minus text-sm"></i>
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <div th:if="${!isOwner}" class="mt-8 p-4 bg-blue-50 rounded-2xl border border-blue-100 flex gap-3">
+        <i class="fas fa-info-circle text-blue-400 mt-1"></i>
+        <p class="text-[11px] text-blue-700 leading-relaxed">
+            You are a member of this joint wallet. Only the owner can manage members and access administrative settings.
+        </p>
+    </div>
+
+</main>
+</body>
+</html>
