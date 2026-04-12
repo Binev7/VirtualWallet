@@ -6,9 +6,7 @@ import com.portfolio.virtualwallet.entity.WalletMembership;
 import com.portfolio.virtualwallet.entity.dto.wallet.WalletCreateDto;
 import com.portfolio.virtualwallet.entity.dto.wallet.WalletResponseDto;
 import com.portfolio.virtualwallet.entity.dto.wallet.WalletUpdateDto;
-import com.portfolio.virtualwallet.exception.DuplicateEntityException;
-import com.portfolio.virtualwallet.exception.EntityNotFoundException;
-import com.portfolio.virtualwallet.exception.WalletNotEmptyException;
+import com.portfolio.virtualwallet.exception.*;
 import com.portfolio.virtualwallet.mapper.WalletMapper;
 import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.repository.WalletMembershipRepository;
@@ -27,6 +25,7 @@ import static com.portfolio.virtualwallet.exception.ExceptionMessages.User.USER_
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Wallet.WALLET_ALREADY_EXISTS;
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Wallet.WALLET_NON_EMPTY;
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Wallet.WALLET_NOT_FOUND;
+import static com.portfolio.virtualwallet.utils.AppConstants.Wallet.CANNOT_DELETE_PRIMARY_WALLET;
 
 @Service
 @RequiredArgsConstructor
@@ -105,9 +104,18 @@ public class WalletServiceImpl implements WalletService {
     @Transactional
     public void deleteWallet(Long id) {
         Wallet wallet = transactionValidationHelper.getWalletIfOwner(id);
+        String currentUsername = SecurityUtils.getCurrentUsername();
 
-        if (wallet.getBalance().compareTo(AppConstants.Wallet.INITIAL_BALANCE) > 0) {
-            throw new WalletNotEmptyException(WALLET_NON_EMPTY);
+        WalletMembership membership = walletMembershipRepository
+                .findByWalletIdAndUserUsername(id, currentUsername)
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.Wallet.WALLET_NOT_FOUND));
+
+        if (membership.isDefault()) {
+            throw new UnauthorizedException(CANNOT_DELETE_PRIMARY_WALLET);
+        }
+
+        if (wallet.getBalance().compareTo(java.math.BigDecimal.ZERO) > 0) {
+            throw new WalletNotEmptyException(ExceptionMessages.Wallet.WALLET_NON_EMPTY);
         }
 
         walletMembershipRepository.deleteAllByWalletId(id);
