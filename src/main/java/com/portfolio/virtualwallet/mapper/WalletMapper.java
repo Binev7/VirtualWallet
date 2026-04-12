@@ -19,6 +19,7 @@ public class WalletMapper {
                 .balance(wallet.getBalance())
                 .isJoint(wallet.isJoint())
                 .isDefault(membership.isDefault())
+                .isOwner(wallet.getOwner().getId().equals(membership.getUser().getId()))
                 .build();
     }
 

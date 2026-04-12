@@ -4,6 +4,18 @@ public final class MvcConstants {
 
     private MvcConstants() {}
 
+    public static final class Paths {
+        public static final String REDIRECT = "redirect:";
+        public static final String WALLETS = "/wallets";
+        public static final String MEMBERS = "/members";
+        public static final String DELETE = "/delete";
+        public static final String ADD = "/add";
+    }
+
+    public static String getWalletMembersRedirect(Long walletId) {
+        return Paths.REDIRECT + Paths.WALLETS + "/" + walletId + Paths.MEMBERS;
+    }
+
     public static final class Views {
         public static final String LOGIN = "auth/login";
         public static final String REGISTER = "auth/register";
@@ -24,6 +36,10 @@ public final class MvcConstants {
         public static final String RECURRING_FORM = "recurring/form";
         public static final String RECURRING_SEARCH = "recurring/search";
         public static final String RECURRING_LIST = "recurring/list";
+        public static final String WALLETS_LIST = "wallets/list";
+        public static final String WALLET_FORM = "wallets/form";
+        public static final String WALLET_MEMBERS = "wallets/members";
+        public static final String REDIRECT_WALLETS = "redirect:/wallets";
     }
 
     public static final class Attributes {
@@ -47,6 +63,13 @@ public final class MvcConstants {
         public static final String SEARCH_RESULTS = "searchResults"; // НОВО
         public static final String QUERY = "query";
         public static final String RECURRING_TRANSACTIONS = "recurringTransactions";
+        public static final String WALLET_CREATE_REQUEST = "walletCreateRequest";
+        public static final String WALLET_UPDATE_REQUEST = "walletUpdateRequest";
+        public static final String ADD_MEMBER_REQUEST = "addMemberRequest";
+        public static final String MEMBERS = "members";
+        public static final String CURRENT_USER_NAME = "currentUsername";
+        public static final String IS_OWNER = "isOwner";
+        public static final String WALLET_DTO = "walletDto";
     }
 
     public static final class Messages {
@@ -64,6 +87,15 @@ public final class MvcConstants {
         public static final String OTP_REQUIRED = "Please enter the OTP sent to your device to verify this large transaction.";
         public static final String RECURRING_SETUP_SUCCESS = "Recurring transfer set up successfully!";
         public static final String RECURRING_CANCELLED_SUCCESS = "Recurring transfer has been successfully cancelled.";
+        public static final String WALLET_CREATED_SUCCESS = "Wallet created successfully!";
+        public static final String WALLET_UPDATED_SUCCESS = "Wallet updated successfully!";
+        public static final String WALLET_DELETED_SUCCESS = "Wallet deleted successfully!";
+        public static final String MEMBER_ADDED_SUCCESS = "Member added to joint wallet!";
+        public static final String MEMBER_REMOVED_SUCCESS = "Member removed from joint wallet!";
+        public static final String MEMBERS_MANAGE = "Only the owner can manage members.";
+        public static final String SUCCESSFULLY_UPDATED_MEMBER_RIGHTS = "Member rights updated successfully!";
+        public static final String UNEXPECTED_ERROR = "An unexpected error occurred.";
+        public static final String CONFIRM_DELETE = "Are you sure you want to delete this wallet?";
     }
 
     public static final class Cookies {

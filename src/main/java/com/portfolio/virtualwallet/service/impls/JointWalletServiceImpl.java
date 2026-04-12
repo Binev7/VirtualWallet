@@ -13,6 +13,7 @@ import com.portfolio.virtualwallet.mapper.WalletMapper;
 import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.repository.WalletMembershipRepository;
 import com.portfolio.virtualwallet.service.interfaces.JointWalletService;
+import com.portfolio.virtualwallet.utils.SecurityUtils;
 import com.portfolio.virtualwallet.utils.TransactionValidationHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.User.USER_NOT_FOUND;
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Wallet.*;
+import static com.portfolio.virtualwallet.utils.AppConstants.Wallet.UNAUTHORIZED_MEMBER;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +38,10 @@ public class JointWalletServiceImpl implements JointWalletService {
     @Override
     @Transactional(readOnly = true)
     public List<WalletMemberDto> getWalletMembers(Long walletId) {
-        transactionValidationHelper.getWalletIfOwner(walletId);
+        String currentUsername = SecurityUtils.getCurrentUsername();
+
+        walletMembershipRepository.findByWalletIdAndUserUsername(walletId, currentUsername)
+                .orElseThrow(() -> new UnauthorizedException(UNAUTHORIZED_MEMBER));
 
         return walletMembershipRepository.findAllByWalletId(walletId)
                 .stream()

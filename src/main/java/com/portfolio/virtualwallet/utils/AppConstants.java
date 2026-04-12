@@ -12,6 +12,8 @@ public final class AppConstants {
     public final class Wallet {
         public static final String DEFAULT_WALLET_NAME = "Main Wallet";
         public static final BigDecimal INITIAL_BALANCE = BigDecimal.ZERO;
+        public static final String UNAUTHORIZED_MEMBER = "You don't have access to this wallet.";
+        public static final String CANNOT_DELETE_PRIMARY_WALLET = "Cannot delete primary wallet.";
     }
 
     @UtilityClass

@@ -4,24 +4,39 @@
 <div th:fragment="mobile-nav"
      class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white rounded-t-3xl shadow-[0_-5px_15px_rgba(0,0,0,0.05)] px-6 py-3 z-50">
     <ul class="flex justify-between items-center text-gray-400">
-        <a th:href="@{/}" class="flex flex-col items-center justify-center text-gray-400 hover:text-[#4A148C]">
-            <i class="fas fa-home text-xl mb-1"></i>
-        </a>
-        <li class="flex flex-col items-center cursor-pointer hover:text-[#4A148C] transition-colors">
-            <i class="fas fa-file-invoice-dollar text-xl mb-1"></i>
-        </li>
-        <li class="relative -top-5">
-            <div class="bg-black text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg cursor-pointer">
-                <i class="fas fa-qrcode text-2xl"></i>
-            </div>
-        </li>
-        <li class="flex flex-col items-center cursor-pointer hover:text-[#4A148C] transition-colors">
-            <a th:href="@{/cards}" class="flex flex-col items-center ...">
-                <i class="fas fa-credit-card text-xl"></i>
+
+        <li class="flex flex-col items-center">
+            <a th:href="@{/}"
+               th:class="${currentUri == '/' ? 'text-[#4A148C]' : 'text-gray-400'} + ' flex flex-col items-center justify-center transition-colors'">
+                <i class="fas fa-home text-xl mb-1"></i>
             </a>
         </li>
-        <li class="flex flex-col items-center cursor-pointer hover:text-[#4A148C] transition-colors">
-            <i class="fas fa-user text-xl mb-1"></i>
+
+        <li class="flex flex-col items-center">
+            <a th:href="@{/wallets}"
+               th:class="${currentUri.startsWith('/wallets') ? 'text-[#4A148C]' : 'text-gray-400'} + ' flex flex-col items-center hover:text-[#4A148C] transition-colors'">
+                <i class="fas fa-wallet text-xl mb-1"></i>
+            </a>
+        </li>
+
+        <li class="relative -top-5">
+            <a th:href="@{/}" class="bg-black text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg cursor-pointer hover:scale-105 transition-transform">
+                <i class="fas fa-qrcode text-2xl"></i>
+            </a>
+        </li>
+
+        <li class="flex flex-col items-center">
+            <a th:href="@{/cards}"
+               th:class="${currentUri.startsWith('/cards') ? 'text-[#4A148C]' : 'text-gray-400'} + ' flex flex-col items-center hover:text-[#4A148C] transition-colors'">
+                <i class="fas fa-credit-card text-xl mb-1"></i>
+            </a>
+        </li>
+
+        <li class="flex flex-col items-center">
+            <a th:href="@{/profile}"
+               th:class="${currentUri.startsWith('/profile') ? 'text-[#4A148C]' : 'text-gray-400'} + ' flex flex-col items-center justify-center transition-colors'">
+                <i class="fas fa-user text-xl mb-1"></i>
+            </a>
         </li>
     </ul>
 </div>
