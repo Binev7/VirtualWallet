@@ -10,12 +10,15 @@ import com.portfolio.virtualwallet.entity.dto.transaction.*;
 import com.portfolio.virtualwallet.entity.enums.TransactionStatus;
 import com.portfolio.virtualwallet.entity.enums.TransactionType;
 import com.portfolio.virtualwallet.exception.EntityNotFoundException;
+import com.portfolio.virtualwallet.exception.UnauthorizedException;
 import com.portfolio.virtualwallet.mapper.TransactionMapper;
 import com.portfolio.virtualwallet.repository.TransactionOtpRepository;
 import com.portfolio.virtualwallet.repository.TransactionRepository;
+import com.portfolio.virtualwallet.repository.WalletMembershipRepository;
 import com.portfolio.virtualwallet.repository.specification.AdminTransactionSpecification;
 import com.portfolio.virtualwallet.repository.specification.TransactionSpecification;
 import com.portfolio.virtualwallet.service.interfaces.TransactionService;
+import com.portfolio.virtualwallet.utils.AppConstants;
 import com.portfolio.virtualwallet.utils.TransactionHelper;
 import com.portfolio.virtualwallet.utils.TransactionValidationHelper;
 import lombok.RequiredArgsConstructor;
@@ -28,11 +31,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import static com.portfolio.virtualwallet.exception.ExceptionMessages.Transaction.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import static com.portfolio.virtualwallet.exception.ExceptionMessages.Transaction.*;
+import static com.portfolio.virtualwallet.exception.ExceptionMessages.Wallet.WALLET_NOT_OWNER;
 import static com.portfolio.virtualwallet.utils.AppConstants.EntityFields.CREATED_AT;
 import static com.portfolio.virtualwallet.utils.AppConstants.SuccessMessages.OTP_SENT;
 import static com.portfolio.virtualwallet.utils.AppConstants.SuccessMessages.TRANSFER_COMPLETED;
@@ -47,6 +51,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final ApplicationEventPublisher eventPublisher;
     private final TransactionOtpRepository otpRepository;
     private final TransactionRepository transactionRepository;
+    private final WalletMembershipRepository walletMembershipRepository;
 
     @Value("${app.transaction.large-amount-threshold}")
     private BigDecimal largeAmountThreshold;
@@ -54,8 +59,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     public TransactionResponseDto transfer(User currentUser, TransferRequestDto request) {
-
         validationHelper.verifyUserCanMakeTransactions(currentUser);
+
         Wallet senderWallet = validationHelper.getWalletIfOwner(request.getSenderWalletId());
         Wallet receiverWallet = validationHelper.getWalletById(request.getReceiverWalletId());
 
@@ -70,7 +75,6 @@ public class TransactionServiceImpl implements TransactionService {
             return transactionMapper.toResponseDto(transaction, OTP_SENT);
         } else {
             transactionHelper.executeMoneyTransfer(transaction, senderWallet, receiverWallet);
-
             eventPublisher.publishEvent(new OnTransactionSuccessEvent(transaction));
 
             return transactionMapper.toResponseDto(transaction, TRANSFER_COMPLETED);
@@ -99,9 +103,7 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         transactionHelper.executeMoneyTransfer(transaction, transaction.getSenderWallet(), transaction.getReceiverWallet());
-
         otpRepository.delete(otp);
-
         eventPublisher.publishEvent(new OnTransactionSuccessEvent(transaction));
 
         return transactionMapper.toResponseDto(transaction, TRANSFER_COMPLETED);
@@ -113,10 +115,11 @@ public class TransactionServiceImpl implements TransactionService {
             User currentUser, Long walletId, LocalDateTime startDate, LocalDateTime endDate,
             TransactionType type, TransactionStatus status, int page, int size) {
 
-        validationHelper.getWalletIfOwner(walletId);
+        walletMembershipRepository.findByWalletIdAndUserId(walletId, currentUser.getId())
+                .orElseThrow(() -> new UnauthorizedException(WALLET_NOT_OWNER));
 
         if (startDate == null) {
-            startDate = LocalDateTime.now().minusMonths(com.portfolio.virtualwallet.utils.AppConstants.History.DEFAULT_HISTORY_MONTHS);
+            startDate = LocalDateTime.now().minusMonths(AppConstants.History.DEFAULT_HISTORY_MONTHS);
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, CREATED_AT));
