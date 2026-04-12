@@ -18,4 +18,6 @@ public class WalletResponseDto {
 
     @JsonProperty("isDefault")
     private boolean isDefault;
+
+    private boolean isOwner;
 }
