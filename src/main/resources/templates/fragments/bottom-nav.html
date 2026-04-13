@@ -34,7 +34,7 @@
 
         <li class="flex flex-col items-center">
             <a th:href="@{/profile}"
-               th:class="${currentUri.startsWith('/profile') ? 'text-[#4A148C]' : 'text-gray-400'} + ' flex flex-col items-center justify-center transition-colors'">
+               th:class="${currentUri.startsWith('user/profile') ? 'text-[#4A148C]' : 'text-gray-400'} + ' flex flex-col items-center justify-center transition-colors'">
                 <i class="fas fa-user text-xl mb-1"></i>
             </a>
         </li>
