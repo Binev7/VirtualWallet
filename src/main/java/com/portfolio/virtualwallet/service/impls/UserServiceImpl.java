@@ -3,10 +3,13 @@ package com.portfolio.virtualwallet.service.impls;
 import com.portfolio.virtualwallet.automation.event.OnRegistrationCompleteEvent;
 import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.entity.VerificationToken;
+import com.portfolio.virtualwallet.entity.dto.user.ChangePasswordDto;
 import com.portfolio.virtualwallet.entity.dto.user.UserDetailsAdminDto;
 import com.portfolio.virtualwallet.entity.dto.user.UserPublicResponseDto;
 import com.portfolio.virtualwallet.exception.DuplicateEntityException;
 import com.portfolio.virtualwallet.exception.EntityNotFoundException;
+import com.portfolio.virtualwallet.exception.ExceptionMessages;
+import com.portfolio.virtualwallet.exception.InvalidPasswordException;
 import com.portfolio.virtualwallet.mapper.UserMapper;
 import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.repository.VerificationTokenRepository;
@@ -18,12 +21,15 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.Auth.PASSWORDS_DO_NOT_MATCH;
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.User.EMAIL_ALREADY_EXISTS;
+import static com.portfolio.virtualwallet.exception.ExceptionMessages.User.PHONE_NUMBER_ALREADY_EXISTS;
 import static com.portfolio.virtualwallet.utils.AppConstants.User.USER_NOT_FOUND;
 
 @Service
@@ -32,8 +38,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    // Нови зависимости за смяната на имейла
     private final VerificationTokenRepository tokenRepository;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -87,5 +93,37 @@ public class UserServiceImpl implements UserService {
         tokenRepository.save(verificationToken);
 
         eventPublisher.publishEvent(new OnRegistrationCompleteEvent(savedUser, appBaseUrl, tokenString));
+    }
+
+    @Override
+    @Transactional
+    public void changePhoneNumber(User currentUser, String newPhoneNumber) {
+        if (userRepository.existsByPhoneNumber(newPhoneNumber)) {
+            throw new DuplicateEntityException(PHONE_NUMBER_ALREADY_EXISTS);
+        }
+
+        User user = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
+
+        user.setPhoneNumber(newPhoneNumber);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(User currentUser, ChangePasswordDto request) {
+        User user = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.User.USER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new InvalidPasswordException(ExceptionMessages.User.INCORRECT_CURRENT_PASSWORD);
+        }
+
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new InvalidPasswordException(ExceptionMessages.User.PASSWORDS_DO_NOT_MATCH);
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 }
