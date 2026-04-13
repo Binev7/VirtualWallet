@@ -60,5 +60,6 @@ public class ValidationMessages {
         public static final String NEW_EMAIL_REQUIRED = "New email is required";
         public static final String CONFIRM_PASSWORD_REQUIRED = "Confirm password is required";
         public static final String PASSWORDS_DO_NOT_MATCH = "Passwords do not match";
+        public static final String CURRENT_PASSWORD_REQUIRED = "Current password is required";
     }
 }
