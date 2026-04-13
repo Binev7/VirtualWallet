@@ -17,6 +17,7 @@ import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.repository.VerificationTokenRepository;
 import com.portfolio.virtualwallet.security.JwtService;
 import com.portfolio.virtualwallet.service.interfaces.AuthenticationService;
+import com.portfolio.virtualwallet.service.interfaces.WalletService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +41,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final ApplicationEventPublisher eventPublisher;
     private final VerificationTokenRepository tokenRepository;
     private final PasswordResetTokenRepository passwordResetTokenRepository;
+    private final WalletService walletService;
 
     @Value("${app.base-url}")
     private String appBaseUrl;
@@ -110,6 +112,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userRepository.save(user);
 
         tokenRepository.delete(verificationToken);
+        walletService.initializeDefaultWallet(user);
     }
 
     @Override

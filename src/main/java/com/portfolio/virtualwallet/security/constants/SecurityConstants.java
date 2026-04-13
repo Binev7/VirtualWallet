@@ -24,6 +24,9 @@ public class SecurityConstants {
             "/",
             "/login",
             "/register",
+            "/verifyEmail",
+            "/forgot-password",
+            "/reset-password",
             "/css/**",
             "/js/**",
             "/images/**"

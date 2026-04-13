@@ -18,7 +18,7 @@ public final class AppConstants {
 
     @UtilityClass
     public class EmailVerification {
-        public static final String VERIFY_EMAIL_ENDPOINT = "/api/v1/auth/verifyEmail?token=";
+        public static final String VERIFY_EMAIL_ENDPOINT = "/verifyEmail?token=";
     }
 
     @UtilityClass

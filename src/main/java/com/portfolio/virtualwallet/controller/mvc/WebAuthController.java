@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -129,5 +130,20 @@ public class WebAuthController {
             model.addAttribute(MvcConstants.Attributes.ERROR, MvcConstants.Messages.INVALID_TOKEN);
             return MvcConstants.Views.RESET_PASSWORD;
         }
+    }
+
+    @GetMapping("/verifyEmail")
+    public String verifyEmail(@RequestParam String token, RedirectAttributes redirectAttributes) {
+        try {
+            authenticationService.verifyEmail(token);
+
+            redirectAttributes.addFlashAttribute(MvcConstants.Attributes.SUCCESS_MESSAGE,
+                    MvcConstants.Messages.EMAIL_VERIFIED_SUCCESS);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute(MvcConstants.Attributes.ERROR,
+                    MvcConstants.Messages.INVALID_TOKEN);
+        }
+
+        return MvcConstants.Views.REDIRECT_LOGIN;
     }
 }

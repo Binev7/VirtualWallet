@@ -11,6 +11,8 @@ public class ExceptionMessages {
         public static final String EMAIL_ALREADY_EXISTS = "Email is already in use.";
         public static final String PHONE_NUMBER_ALREADY_EXISTS = "Phone number is already in use.";
         public static final String USER_NOT_FOUND = "User not found.";
+        public static final String INCORRECT_CURRENT_PASSWORD = "The current password you entered is incorrect.";
+        public static final String PASSWORDS_DO_NOT_MATCH = "New passwords do not match.";
     }
 
     @UtilityClass
