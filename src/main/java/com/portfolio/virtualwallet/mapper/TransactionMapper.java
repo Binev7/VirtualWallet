@@ -80,12 +80,12 @@ public class TransactionMapper {
             case DEPOSIT -> isIncoming = true;
             case WITHDRAW -> isIncoming = false;
             case TRANSFER -> {
-                if (transaction.getReceiverWallet().getId().equals(requestWalletId)) {
+                if (transaction.getReceiverWallet() != null && transaction.getReceiverWallet().getId().equals(requestWalletId)) {
                     isIncoming = true;
                     counterpartyName = transaction.getSenderWallet().getOwner().getUsername();
                 } else {
                     isIncoming = false;
-                    counterpartyName = transaction.getReceiverWallet().getOwner().getUsername();
+                    counterpartyName = transaction.getReceiverWallet() != null ? transaction.getReceiverWallet().getOwner().getUsername() : "Unknown";
                 }
             }
         }
