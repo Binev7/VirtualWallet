@@ -5,6 +5,7 @@ import com.portfolio.virtualwallet.entity.dto.transaction.*;
 import com.portfolio.virtualwallet.entity.enums.TransactionStatus;
 import com.portfolio.virtualwallet.entity.enums.TransactionType;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 
@@ -22,4 +23,7 @@ public interface TransactionService {
             String username, String direction,
             TransactionType type, TransactionStatus status,
             int page, int size, String sortBy);
+
+    Page<TransactionHistoryDto> getUserTransactions(User currentUser, Pageable pageable);
 }
+

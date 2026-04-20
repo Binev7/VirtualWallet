@@ -14,6 +14,8 @@ public final class AppConstants {
         public static final BigDecimal INITIAL_BALANCE = BigDecimal.ZERO;
         public static final String UNAUTHORIZED_MEMBER = "You don't have access to this wallet.";
         public static final String CANNOT_DELETE_PRIMARY_WALLET = "Cannot delete primary wallet.";
+        public static final String SENDER_WALLET = "senderWallet";
+        public static final String RECEIVER_WALLET = "receiverWallet";
     }
 
     @UtilityClass
@@ -82,7 +84,7 @@ public final class AppConstants {
     public class History {
         public static final String INCOMING_DIRECTION = "INCOMING";
         public static final String OUTGOING_DIRECTION = "OUTGOING";
-        public static final String EXTERNAL_BANK = "External Bank";
+        public static final String EXTERNAL_BANK = "Bank Account / Card";
         public static final int DEFAULT_HISTORY_MONTHS = 1;
     }
 
@@ -104,6 +106,17 @@ public final class AppConstants {
     public class User {
         public static final String USER_IS_BLOCKED = "Your account has been blocked due to suspicious activity. You cannot perform transactions.";
         public static final String USER_NOT_FOUND = "User not found.";
+    }
+
+    @UtilityClass
+    public static final class TransactionDirection {
+        public static final String INCOMING_DIRECTION = "INCOME";
+        public static final String OUTGOING_DIRECTION = "OUTCOME";
+    }
+
+    @UtilityClass
+    public static final class TransactionCounterparty {
+        public static final String EXTERNAL_BANK = "Bank Account / Card";
     }
 
     @UtilityClass
