@@ -4,14 +4,12 @@ import com.portfolio.virtualwallet.controller.mvc.constants.MvcConstants;
 import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.entity.dto.transaction.DepositRequestDto;
 import com.portfolio.virtualwallet.entity.dto.transaction.WithdrawalRequestDto;
-import com.portfolio.virtualwallet.exception.EntityNotFoundException;
-import com.portfolio.virtualwallet.exception.ExceptionMessages;
+
 import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.service.interfaces.CardService;
 import com.portfolio.virtualwallet.service.interfaces.DepositService;
 import com.portfolio.virtualwallet.service.interfaces.WalletService;
 import com.portfolio.virtualwallet.service.interfaces.WithdrawalService;
-import com.portfolio.virtualwallet.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,12 +43,8 @@ public class WebFundingController {
     public String handleDeposit(
             @ModelAttribute(MvcConstants.Attributes.DEPOSIT_REQUEST) DepositRequestDto request,
             RedirectAttributes redirectAttributes,
-            Model model) {
+            Model model, User currentUser) {
         try {
-            String currentUsername = SecurityUtils.getCurrentUsername();
-            User currentUser = userRepository.findByUsername(currentUsername)
-                    .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.User.USER_NOT_FOUND));
-
             depositService.depositToWallet(currentUser, request);
 
             redirectAttributes.addFlashAttribute(
@@ -81,12 +75,8 @@ public class WebFundingController {
     public String handleWithdraw(
             @ModelAttribute(MvcConstants.Attributes.WITHDRAWAL_REQUEST) WithdrawalRequestDto request,
             RedirectAttributes redirectAttributes,
-            Model model) {
+            Model model, User currentUser) {
         try {
-            String currentUsername = SecurityUtils.getCurrentUsername();
-            User currentUser = userRepository.findByUsername(currentUsername)
-                    .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.User.USER_NOT_FOUND));
-
             withdrawalService.withdrawFromWallet(currentUser, request);
 
             redirectAttributes.addFlashAttribute(

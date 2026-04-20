@@ -1,12 +1,12 @@
 package com.portfolio.virtualwallet.controller.mvc;
 
 import com.portfolio.virtualwallet.controller.mvc.constants.MvcConstants;
+import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.entity.dto.wallet.*;
 import com.portfolio.virtualwallet.exception.UnauthorizedException;
 import com.portfolio.virtualwallet.exception.WalletNotEmptyException;
 import com.portfolio.virtualwallet.service.interfaces.JointWalletService;
 import com.portfolio.virtualwallet.service.interfaces.WalletService;
-import com.portfolio.virtualwallet.utils.SecurityUtils;
 import com.portfolio.virtualwallet.utils.TransactionValidationHelper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,6 @@ public class WebWalletController {
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute(MvcConstants.Attributes.WALLET_DTO, new WalletCreateDto());
-
         return MvcConstants.Views.WALLET_FORM;
     }
 
@@ -87,35 +86,33 @@ public class WebWalletController {
             walletService.deleteWallet(id);
             redirectAttributes.addFlashAttribute(MvcConstants.Attributes.SUCCESS_MESSAGE,
                     MvcConstants.Messages.WALLET_DELETED_SUCCESS);
-        } catch (WalletNotEmptyException e) {
-            redirectAttributes.addFlashAttribute(MvcConstants.Attributes.ERROR,
-                    e.getMessage());
-        } catch (UnauthorizedException e) {
-            redirectAttributes.addFlashAttribute(MvcConstants.Attributes.ERROR,
-                    e.getMessage());
+        } catch (WalletNotEmptyException | UnauthorizedException e) {
+            redirectAttributes.addFlashAttribute(MvcConstants.Attributes.ERROR, e.getMessage());
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute(MvcConstants.Attributes.ERROR,
-                    UNEXPECTED_ERROR);
+            redirectAttributes.addFlashAttribute(MvcConstants.Attributes.ERROR, UNEXPECTED_ERROR);
         }
 
         return MvcConstants.Views.REDIRECT_WALLETS;
     }
 
     @GetMapping("/{id}/members")
-    public String manageMembers(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
-        try {
-            String currentUsername = SecurityUtils.getCurrentUsername();
+    public String manageMembers(@PathVariable Long id,
+                                Model model,
+                                RedirectAttributes redirectAttributes,
+                                @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
 
+        if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
+
+        try {
             var members = jointWalletService.getWalletMembers(id);
 
             boolean isOwner = members.stream()
-                    .anyMatch(m -> m.getUsername().equals(currentUsername) && m.isOwner());
+                    .anyMatch(m -> m.getUsername().equals(currentUser.getUsername()) && m.isOwner());
 
             model.addAttribute(MvcConstants.Attributes.WALLET, id);
             model.addAttribute(MvcConstants.Attributes.MEMBERS, members);
             model.addAttribute(MvcConstants.Attributes.ADD_MEMBER_REQUEST, new AddWalletMemberDto());
-            model.addAttribute(MvcConstants.Attributes.CURRENT_USER_NAME, currentUsername);
-
+            model.addAttribute(MvcConstants.Attributes.CURRENT_USER_NAME, currentUser.getUsername());
             model.addAttribute(MvcConstants.Attributes.IS_OWNER, isOwner);
 
             return MvcConstants.Views.WALLET_MEMBERS;

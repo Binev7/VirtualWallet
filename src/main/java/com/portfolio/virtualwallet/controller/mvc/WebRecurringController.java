@@ -11,7 +11,6 @@ import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.repository.specification.UserSpecification;
 import com.portfolio.virtualwallet.service.interfaces.RecurringTransactionService;
 import com.portfolio.virtualwallet.service.interfaces.WalletService;
-import com.portfolio.virtualwallet.utils.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -53,10 +52,7 @@ public class WebRecurringController {
     }
 
     @GetMapping
-    public String showMyRecurringTransactions(Model model) {
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        User currentUser = userRepository.findByUsername(currentUsername).orElseThrow();
-
+    public String showMyRecurringTransactions(Model model, User currentUser) {
         model.addAttribute(MvcConstants.Attributes.RECURRING_TRANSACTIONS,
                 recurringService.getUserRecurringTransfers(currentUser));
 
@@ -64,11 +60,15 @@ public class WebRecurringController {
     }
 
     @GetMapping("/search")
-    public String showRecurringSearch(@RequestParam(required = false) String query, Model model) {
-        if (query != null && !query.trim().isEmpty()) {
-            String currentUsername = SecurityUtils.getCurrentUsername();
+    public String showRecurringSearch(
+            @RequestParam(required = false) String query,
+            Model model,
+            @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
 
-            Specification<User> spec = UserSpecification.searchUsers(query, currentUsername);
+        if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
+
+        if (query != null && !query.trim().isEmpty()) {
+            Specification<User> spec = UserSpecification.searchUsers(query, currentUser.getUsername());
             List<User> foundUsers = userRepository.findAll(spec);
 
             List<UserPublicResponseDto> publicUsers = foundUsers.stream()
@@ -83,20 +83,21 @@ public class WebRecurringController {
     }
 
     @PostMapping("/process")
-    public String processRecurringTransaction(@RequestParam String receiverName,
-                                              @Valid @ModelAttribute(MvcConstants.Attributes.RECURRING_REQUEST) RecurringTransactionRequestDto request,
-                                              BindingResult bindingResult,
-                                              Model model,
-                                              RedirectAttributes redirectAttributes) {
+    public String processRecurringTransaction(
+            @RequestParam String receiverName,
+            @Valid @ModelAttribute(MvcConstants.Attributes.RECURRING_REQUEST) RecurringTransactionRequestDto request,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes,
+            @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+
+        if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
         if (bindingResult.hasErrors()) {
             model.addAttribute(MvcConstants.Attributes.WALLETS, walletService.getMyWallets());
             model.addAttribute(MvcConstants.Attributes.RECEIVER_NAME, receiverName);
             return MvcConstants.Views.RECURRING_FORM;
         }
-
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        User currentUser = userRepository.findByUsername(currentUsername).orElseThrow();
 
         recurringService.createRecurringTransfer(currentUser, request);
 
@@ -105,9 +106,12 @@ public class WebRecurringController {
     }
 
     @PostMapping("/cancel/{id}")
-    public String cancelRecurring(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        String currentUsername = SecurityUtils.getCurrentUsername();
-        User currentUser = userRepository.findByUsername(currentUsername).orElseThrow();
+    public String cancelRecurring(
+            @PathVariable Long id,
+            RedirectAttributes redirectAttributes,
+            @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+
+        if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
         try {
             recurringService.cancelRecurringTransfer(currentUser, id);

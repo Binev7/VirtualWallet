@@ -12,7 +12,6 @@ import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.service.interfaces.TransactionService;
 import com.portfolio.virtualwallet.service.interfaces.UserService;
 import com.portfolio.virtualwallet.service.interfaces.WalletService;
-import com.portfolio.virtualwallet.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,8 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 
+import static com.portfolio.virtualwallet.utils.AppConstants.Pagination.DEFAULT_PAGE_NUMBER;
+import static com.portfolio.virtualwallet.utils.AppConstants.Pagination.DEFAULT_PAGE_SIZE;
+
 @Controller
-@RequestMapping("/transfer")
+@RequestMapping("/transfers")
 @RequiredArgsConstructor
 public class WebTransferController {
 
@@ -34,17 +36,28 @@ public class WebTransferController {
     private final UserService userService;
 
     @GetMapping
-    public String showSearchPage(@RequestParam(required = false) String query, Model model) {
+    public String showSearchPage(@RequestParam(required = false) String query,
+                                 Model model,
+                                 @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+        if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
+
         if (query != null && !query.isBlank()) {
-            Page<UserPublicResponseDto> users = userService.searchPublicUsers(query, PageRequest.of(0, 10));
-            model.addAttribute("searchResults", users.getContent());
-            model.addAttribute("query", query);
+            int page = Integer.parseInt(DEFAULT_PAGE_NUMBER);
+            int size = Integer.parseInt(DEFAULT_PAGE_SIZE);
+            Page<UserPublicResponseDto> users = userService.searchPublicUsers(query, PageRequest.of(page, size));
+
+            model.addAttribute(MvcConstants.Attributes.SEARCH_RESULTS, users.getContent());
+            model.addAttribute(MvcConstants.Attributes.QUERY, query);
         }
         return MvcConstants.Views.TRANSFER_SEARCH;
     }
 
     @GetMapping("/new")
-    public String showTransferForm(@RequestParam String receiverUsername, Model model) {
+    public String showTransferForm(@RequestParam String receiverUsername,
+                                   Model model,
+                                   @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+        if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
+
         User receiver = userRepository.findByUsername(receiverUsername)
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.User.USER_NOT_FOUND));
 
@@ -66,18 +79,18 @@ public class WebTransferController {
             @ModelAttribute(MvcConstants.Attributes.TRANSFER_REQUEST) TransferRequestDto request,
             @RequestParam String receiverName,
             RedirectAttributes redirectAttributes,
-            Model model) {
-        try {
-            String currentUsername = SecurityUtils.getCurrentUsername();
-            User currentUser = userRepository.findByUsername(currentUsername)
-                    .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.User.USER_NOT_FOUND));
+            Model model,
+            @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
 
+        if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
+
+        try {
             TransactionResponseDto response = transactionService.transfer(currentUser, request);
 
             if (request.getAmount().compareTo(BigDecimal.valueOf(1000)) > 0) {
                 redirectAttributes.addFlashAttribute(MvcConstants.Attributes.TRANSACTION_ID, response.getTransactionId());
-                redirectAttributes.addFlashAttribute("infoMessage", MvcConstants.Messages.OTP_REQUIRED);
-                return "redirect:/transfer/otp";
+                redirectAttributes.addFlashAttribute(MvcConstants.Attributes.INFO_MESSAGE, MvcConstants.Messages.OTP_REQUIRED);
+                return MvcConstants.Views.REDIRECT_TRANSFER_OTP;
             }
 
             redirectAttributes.addFlashAttribute(MvcConstants.Attributes.SUCCESS_MESSAGE, MvcConstants.Messages.TRANSFER_SUCCESS);
@@ -92,9 +105,12 @@ public class WebTransferController {
     }
 
     @GetMapping("/otp")
-    public String showOtpPage(Model model) {
+    public String showOtpPage(Model model,
+                              @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+        if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
+
         if (!model.containsAttribute(MvcConstants.Attributes.TRANSACTION_ID)) {
-            return "redirect:/transfer";
+            return MvcConstants.Views.REDIRECT_TRANSFER;
         }
 
         Long transactionId = (Long) model.getAttribute(MvcConstants.Attributes.TRANSACTION_ID);
@@ -110,12 +126,12 @@ public class WebTransferController {
     public String verifyOtp(
             @ModelAttribute(MvcConstants.Attributes.OTP_REQUEST) OtpVerificationRequestDto request,
             RedirectAttributes redirectAttributes,
-            Model model) {
-        try {
-            String currentUsername = SecurityUtils.getCurrentUsername();
-            User currentUser = userRepository.findByUsername(currentUsername)
-                    .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.User.USER_NOT_FOUND));
+            Model model,
+            @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
 
+        if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
+
+        try {
             transactionService.verifyOtp(currentUser, request);
 
             redirectAttributes.addFlashAttribute(MvcConstants.Attributes.SUCCESS_MESSAGE, MvcConstants.Messages.TRANSFER_SUCCESS);
