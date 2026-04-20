@@ -9,6 +9,14 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <a th:if="${currentUser != null and currentUser.role?.name() == 'ADMIN'}"
+       th:href="@{/admin/users}"
+       class="flex flex-col items-center justify-center w-full group">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 group-hover:bg-purple-50 group-hover:text-[#4A148C] text-gray-400">
+            <i class="fas fa-shield-halved text-xl"></i>
+        </div>
+    </a>
+
     <script>
         tailwind.config = {
             theme: {

@@ -12,6 +12,9 @@ public final class MvcConstants {
         public static final String ADD = "/add";
         public static final String PROFILE = "/profile";
         public static final String TRANSACTIONS = "/transactions";
+        public static final String ADMIN_USERS = "/admin/users";
+        public static final String ADMIN_TRANSACTIONS = "/admin/transactions";
+        public static final String ADMIN_DASHBOARD = "/admin";
     }
 
     public static String getWalletMembersRedirect(Long walletId) {
@@ -50,6 +53,12 @@ public final class MvcConstants {
         public static final String PROFILE = "user/profile";
         public static final String REDIRECT_PROFILE = "redirect:/profile";
         public static final String TRANSACTIONS_HISTORY = "transactions/history";
+        public static final String ADMIN_USERS_LIST = "admin/users";
+        public static final String REDIRECT_ADMIN_USERS = "redirect:/admin/users";
+        public static final String ADMIN_TRANSACTIONS_LIST = "admin/transactions";
+        public static final String ADMIN_DASHBOARD_VIEW = "admin/dashboard";
+        public static final String REDIRECT_TRANSFER = "redirect:/transfer";
+        public static final String REDIRECT_TRANSFER_OTP = "redirect:/transfer/otp";
     }
 
     public static final class Attributes {
@@ -85,6 +94,8 @@ public final class MvcConstants {
         public static final String CHANGE_PHONE_REQUEST = "changePhoneDto";
         public static final String CHANGE_PASSWORD_REQUEST = "changePasswordDto";
         public static final String TRANSACTIONS_PAGE = "transactionsPage";
+        public static final String USERS_PAGE = "usersPage";
+        public static final String INFO_MESSAGE = "infoMessage";
     }
 
     public static final class Messages {
@@ -118,6 +129,8 @@ public final class MvcConstants {
         public static final String INVALID_PHONE_FORMAT = "Please provide a valid 10-digit phone number.";
         public static final String PASSWORD_UPDATED_SUCCESS = "Password updated successfully!";
         public static final String INVALID_PASSWORD_FORMAT = "Please check your password details and try again.";
+        public static final String USER_BLOCKED_SUCCESS = "User has been blocked successfully.";
+        public static final String USER_UNBLOCKED_SUCCESS = "User has been unblocked successfully.";
     }
 
     public static final class Cookies {
