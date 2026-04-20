@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout/base}">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+
+<main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
+
+    <div class="flex items-center justify-between mb-6 mt-2 sticky top-0 bg-gray-50/95 backdrop-blur z-10 py-3">
+        <div class="flex items-center">
+            <a th:href="@{/}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 class="text-xl font-bold ml-4 text-gray-800">Manage Users</h1>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/alerts :: success}"></div>
+    <div th:replace="~{fragments/alerts :: error}"></div>
+
+    <form th:action="@{/admin/users}" method="get" class="mb-6">
+        <div class="relative">
+            <input type="text" name="query" th:value="${query}" placeholder="Search by username or email..."
+                   class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-2xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#4A148C] focus:border-transparent transition-all">
+            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#4A148C] text-white p-1.5 rounded-xl hover:bg-purple-900 transition">
+                <i class="fas fa-arrow-right text-xs"></i>
+            </button>
+        </div>
+    </form>
+
+    <div class="space-y-4">
+
+        <div th:if="${usersPage.empty}" class="text-center py-12 bg-white rounded-3xl border border-gray-100 shadow-sm">
+            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3 text-gray-300">
+                <i class="fas fa-users-slash text-2xl"></i>
+            </div>
+            <p class="text-sm text-gray-500 font-medium">No users found.</p>
+        </div>
+
+        <div th:each="user : ${usersPage.content}"
+             class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition-shadow">
+
+            <div class="flex items-center gap-3 overflow-hidden">
+                <img th:src="@{'https://ui-avatars.com/api/?name=' + ${user.username} + '&background=random&color=fff'}"
+                     alt="User" class="w-10 h-10 rounded-full shadow-sm shrink-0">
+
+                <div class="truncate">
+                    <div class="flex items-center gap-2">
+                        <h4 class="text-sm font-bold text-gray-800 truncate" th:text="${user.username}">Username</h4>
+                        <span th:if="${user.role == 'ADMIN'}" class="bg-purple-100 text-purple-700 text-[8px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider">ADMIN</span>
+                    </div>
+                    <p class="text-xs text-gray-400 truncate" th:text="${user.email}">email@example.com</p>
+                </div>
+            </div>
+
+            <form th:action="@{/admin/users/{id}/block-status(id=${user.id})}" method="post" class="shrink-0 ml-2" th:if="${user.username != currentUser.username}">
+                <input type="hidden" name="isBlocked" th:value="${!user.isBlocked}">
+
+                <button type="submit"
+                        th:class="${user.isBlocked ? 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100' : 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100'} + ' flex items-center justify-center w-8 h-8 rounded-full border transition-colors'"
+                        th:title="${user.isBlocked ? 'User is BLOCKED. Click to Unblock.' : 'User is ACTIVE. Click to Block.'}">
+                    <i th:class="${user.isBlocked ? 'fas fa-lock' : 'fas fa-unlock'} + ' text-xs'"></i>
+                </button>
+            </form>
+
+            <div th:if="${user.username == currentUser.username}" class="shrink-0 ml-2">
+                <span class="text-[10px] font-bold text-gray-300 uppercase tracking-widest">You</span>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${usersPage.totalPages > 1}" class="mt-8 flex justify-between items-center px-1">
+        <a th:href="@{/admin/users(page=${usersPage.number - 1}, query=${query})}"
+           th:class="${usersPage.first ? 'pointer-events-none opacity-40' : 'hover:bg-gray-200'} + ' px-4 py-2 bg-white border border-gray-200 rounded-xl shadow-sm text-xs font-bold text-gray-600 transition-all'">
+            <i class="fas fa-chevron-left mr-1"></i> Prev
+        </a>
+
+        <span class="text-xs text-gray-400 font-medium">
+            <span class="text-gray-800 font-bold" th:text="${usersPage.number + 1}">1</span> / <span th:text="${usersPage.totalPages}">5</span>
+        </span>
+
+        <a th:href="@{/admin/users(page=${usersPage.number + 1}, query=${query})}"
+           th:class="${usersPage.last ? 'pointer-events-none opacity-40' : 'hover:bg-gray-200'} + ' px-4 py-2 bg-white border border-gray-200 rounded-xl shadow-sm text-xs font-bold text-gray-600 transition-all'">
+            Next <i class="fas fa-chevron-right ml-1"></i>
+        </a>
+    </div>
+
+</main>
+</body>
+</html>
