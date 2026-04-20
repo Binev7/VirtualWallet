@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout/base}">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+
+<main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
+
+    <div class="flex items-center justify-between mb-6 mt-2 sticky top-0 bg-gray-50/95 backdrop-blur z-10 py-3">
+        <div class="flex items-center">
+            <a th:href="@{/}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 class="text-xl font-bold ml-4">Transaction History</h1>
+        </div>
+    </div>
+
+    <div class="space-y-3">
+
+        <div th:if="${transactionsPage.empty}" class="text-center py-16 text-gray-500 bg-white rounded-3xl border border-gray-100 shadow-sm">
+            <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-300">
+                <i class="fas fa-receipt text-3xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-gray-700 mb-1">No Transactions Yet</h3>
+            <p class="text-xs text-gray-400">Your transaction history will appear here.</p>
+        </div>
+
+        <div th:each="tx : ${transactionsPage.content}"
+             class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition-shadow">
+
+            <div class="flex items-center gap-4">
+                <div th:class="${tx.direction == 'INCOMING' ? 'w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-500 shrink-0' : 'w-12 h-12 bg-red-50 rounded-full flex items-center justify-center text-red-500 shrink-0'}">
+                    <i class="fas" th:classappend="${tx.direction == 'INCOMING' ? 'fa-arrow-up' : 'fa-arrow-down'}"></i>
+                </div>
+
+                <div>
+                    <h4 class="text-sm font-bold text-gray-800 uppercase tracking-wide" th:text="${tx.type}">TRANSFER</h4>
+                    <p class="text-[10px] text-gray-400 mt-0.5 font-medium" th:text="${#temporals.format(tx.date, 'dd MMMM yyyy, HH:mm')}">09 April 2026, 15:31</p>
+                </div>
+            </div>
+
+            <div th:class="${tx.direction == 'INCOMING' ? 'text-green-500 font-bold text-base tracking-tight' : 'text-gray-900 font-bold text-base tracking-tight'}"
+                 th:text="${tx.direction == 'INCOMING' ? '+' : '-'} + '$' + ${#numbers.formatDecimal(tx.amount, 1, 'COMMA', 2, 'POINT')}">
+                -$1,500.00
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${transactionsPage.totalPages > 1}" class="mt-8 flex justify-between items-center px-1">
+
+        <a th:href="@{/transactions(page=${transactionsPage.number - 1})}"
+           th:class="${transactionsPage.first ? 'pointer-events-none opacity-40' : 'hover:bg-gray-200 hover:text-gray-900'} + ' flex items-center justify-center px-4 py-2.5 bg-white border border-gray-200 rounded-xl shadow-sm text-xs font-bold text-gray-600 transition-all'">
+            <i class="fas fa-chevron-left mr-2 text-[10px]"></i> Prev
+        </a>
+
+        <span class="text-xs text-gray-400 font-medium bg-white px-4 py-2.5 rounded-xl border border-gray-100 shadow-sm">
+            <span class="text-gray-800 font-bold" th:text="${transactionsPage.number + 1}">1</span>
+            of
+            <span th:text="${transactionsPage.totalPages}">5</span>
+        </span>
+
+        <a th:href="@{/transactions(page=${transactionsPage.number + 1})}"
+           th:class="${transactionsPage.last ? 'pointer-events-none opacity-40' : 'hover:bg-gray-200 hover:text-gray-900'} + ' flex items-center justify-center px-4 py-2.5 bg-white border border-gray-200 rounded-xl shadow-sm text-xs font-bold text-gray-600 transition-all'">
+            Next <i class="fas fa-chevron-right ml-2 text-[10px]"></i>
+        </a>
+    </div>
+
+</main>
+</body>
+</html>
