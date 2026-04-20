@@ -3,6 +3,8 @@ package com.portfolio.virtualwallet.repository.specification;
 import com.portfolio.virtualwallet.entity.Transaction;
 import com.portfolio.virtualwallet.entity.enums.TransactionStatus;
 import com.portfolio.virtualwallet.entity.enums.TransactionType;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -45,6 +47,22 @@ public class TransactionSpecification {
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    public static Specification<Transaction> getGlobalUserHistorySpecification(List<Long> userWalletIds) {
+        return (root, query, cb) -> {
+            if (userWalletIds == null || userWalletIds.isEmpty()) {
+                return cb.disjunction();
+            }
+
+            Join<Transaction, Object> senderJoin = root.join(SENDER_WALLET, JoinType.LEFT);
+            Join<Transaction, Object> receiverJoin = root.join(RECEIVER_WALLET, JoinType.LEFT);
+
+            Predicate isSender = senderJoin.get(ID).in(userWalletIds);
+            Predicate isReceiver = receiverJoin.get(ID).in(userWalletIds);
+
+            return cb.or(isSender, isReceiver);
         };
     }
 }
