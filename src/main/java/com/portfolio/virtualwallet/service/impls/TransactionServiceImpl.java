@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Transaction.*;
 import static com.portfolio.virtualwallet.exception.ExceptionMessages.Wallet.WALLET_NOT_OWNER;
@@ -145,5 +146,35 @@ public class TransactionServiceImpl implements TransactionService {
 
         return transactionRepository.findAll(spec, pageable)
                 .map(transactionMapper::toAdminDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TransactionHistoryDto> getUserTransactions(User currentUser, Pageable pageable) {
+
+        List<Long> userWalletIds = walletMembershipRepository.findAllByUserUsername(currentUser.getUsername())
+                .stream()
+                .map(membership -> membership.getWallet().getId())
+                .toList();
+
+        if (userWalletIds.isEmpty()) {
+            return Page.empty(pageable);
+        }
+
+        Specification<Transaction> spec = TransactionSpecification.getGlobalUserHistorySpecification(userWalletIds);
+
+        return transactionRepository.findAll(spec, pageable).map(tx -> {
+
+            Long relevantWalletId = null;
+
+            if (tx.getReceiverWallet() != null && userWalletIds.contains(tx.getReceiverWallet().getId())) {
+                relevantWalletId = tx.getReceiverWallet().getId();
+            }
+            else if (tx.getSenderWallet() != null && userWalletIds.contains(tx.getSenderWallet().getId())) {
+                relevantWalletId = tx.getSenderWallet().getId();
+            }
+
+            return transactionMapper.toHistoryDto(tx, relevantWalletId);
+        });
     }
 }
