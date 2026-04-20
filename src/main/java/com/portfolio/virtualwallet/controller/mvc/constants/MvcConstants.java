@@ -11,6 +11,7 @@ public final class MvcConstants {
         public static final String DELETE = "/delete";
         public static final String ADD = "/add";
         public static final String PROFILE = "/profile";
+        public static final String TRANSACTIONS = "/transactions";
     }
 
     public static String getWalletMembersRedirect(Long walletId) {
@@ -48,6 +49,7 @@ public final class MvcConstants {
         public static final String REDIRECT_LOGIN = "redirect:/login";
         public static final String PROFILE = "user/profile";
         public static final String REDIRECT_PROFILE = "redirect:/profile";
+        public static final String TRANSACTIONS_HISTORY = "transactions/history";
     }
 
     public static final class Attributes {
@@ -82,6 +84,7 @@ public final class MvcConstants {
         public static final String BINDING_RESULT_PREFIX = "org.springframework.validation.BindingResult.";
         public static final String CHANGE_PHONE_REQUEST = "changePhoneDto";
         public static final String CHANGE_PASSWORD_REQUEST = "changePasswordDto";
+        public static final String TRANSACTIONS_PAGE = "transactionsPage";
     }
 
     public static final class Messages {
