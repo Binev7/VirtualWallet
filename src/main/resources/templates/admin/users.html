@@ -49,13 +49,14 @@
                 <div class="truncate">
                     <div class="flex items-center gap-2">
                         <h4 class="text-sm font-bold text-gray-800 truncate" th:text="${user.username}">Username</h4>
-                        <span th:if="${user.role == 'ADMIN'}" class="bg-purple-100 text-purple-700 text-[8px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider">ADMIN</span>
+                        <span th:if="${user.role == 'ADMIN' or user.role == 'ROLE_ADMIN'}" class="bg-purple-100 text-purple-700 text-[8px] px-1.5 py-0.5 rounded-md font-bold uppercase tracking-wider">ADMIN</span>
                     </div>
                     <p class="text-xs text-gray-400 truncate" th:text="${user.email}">email@example.com</p>
                 </div>
             </div>
 
-            <form th:action="@{/admin/users/{id}/block-status(id=${user.id})}" method="post" class="shrink-0 ml-2" th:if="${user.username != currentUser.username}">
+            <form th:action="@{/admin/users/{id}/block-status(id=${user.id})}" method="post" class="shrink-0 ml-2"
+                  th:if="${user.username != currentUser.username and user.role != 'ADMIN' and user.role != 'ROLE_ADMIN'}">
                 <input type="hidden" name="isBlocked" th:value="${!user.isBlocked}">
 
                 <button type="submit"
@@ -67,6 +68,10 @@
 
             <div th:if="${user.username == currentUser.username}" class="shrink-0 ml-2">
                 <span class="text-[10px] font-bold text-gray-300 uppercase tracking-widest">You</span>
+            </div>
+
+            <div th:if="${user.username != currentUser.username and (user.role == 'ADMIN' or user.role == 'ROLE_ADMIN')}" class="shrink-0 ml-2">
+                <i class="fas fa-shield-alt text-purple-300 text-lg" title="Protected Admin"></i>
             </div>
         </div>
     </div>
