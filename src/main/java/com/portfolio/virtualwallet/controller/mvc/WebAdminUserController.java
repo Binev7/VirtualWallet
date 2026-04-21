@@ -20,7 +20,7 @@ import static com.portfolio.virtualwallet.utils.AppConstants.Pagination.DEFAULT_
 import static com.portfolio.virtualwallet.utils.AppConstants.Pagination.DEFAULT_PAGE_SIZE;
 
 @Controller
-@RequestMapping(MvcConstants.Paths.ADMIN_USERS)
+@RequestMapping("/admin/users")
 @RequiredArgsConstructor
 public class WebAdminUserController {
 
