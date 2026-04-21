@@ -6,15 +6,13 @@ import com.portfolio.virtualwallet.entity.VerificationToken;
 import com.portfolio.virtualwallet.entity.dto.user.ChangePasswordDto;
 import com.portfolio.virtualwallet.entity.dto.user.UserDetailsAdminDto;
 import com.portfolio.virtualwallet.entity.dto.user.UserPublicResponseDto;
-import com.portfolio.virtualwallet.exception.DuplicateEntityException;
-import com.portfolio.virtualwallet.exception.EntityNotFoundException;
-import com.portfolio.virtualwallet.exception.ExceptionMessages;
-import com.portfolio.virtualwallet.exception.InvalidPasswordException;
+import com.portfolio.virtualwallet.exception.*;
 import com.portfolio.virtualwallet.mapper.UserMapper;
 import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.repository.VerificationTokenRepository;
 import com.portfolio.virtualwallet.repository.specification.UserSpecification;
 import com.portfolio.virtualwallet.service.interfaces.UserService;
+import com.portfolio.virtualwallet.utils.AppConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -69,6 +67,10 @@ public class UserServiceImpl implements UserService {
     public void toggleUserBlockStatus(Long userId, boolean isBlocked) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException(USER_NOT_FOUND));
+
+        if (user.getRole().name().equals(AppConstants.Role.ADMIN)) {
+            throw new AdminProtectionException(ExceptionMessages.User.ADMIN_PROTECTION);
+        }
 
         user.setBlocked(isBlocked);
         userRepository.save(user);
