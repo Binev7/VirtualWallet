@@ -96,6 +96,10 @@ public final class MvcConstants {
         public static final String TRANSACTIONS_PAGE = "transactionsPage";
         public static final String USERS_PAGE = "usersPage";
         public static final String INFO_MESSAGE = "infoMessage";
+        public static final String START_DATE = "startDate";
+        public static final String END_DATE = "endDate";
+        public static final String SELECTED_TYPE = "selectedType";
+        public static final String SELECTED_STATUS = "selectedStatus";
     }
 
     public static final class Messages {
