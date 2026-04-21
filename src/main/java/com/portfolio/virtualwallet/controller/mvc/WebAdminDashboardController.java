@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(MvcConstants.Paths.ADMIN_DASHBOARD)
+@RequestMapping("/admin")
 public class WebAdminDashboardController {
 
     @GetMapping

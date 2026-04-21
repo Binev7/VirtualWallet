@@ -33,7 +33,10 @@ public class WebRecurringController {
     private final UserMapper userMapper;
 
     @GetMapping("/new")
-    public String showRecurringForm(@RequestParam String receiverUsername, Model model) {
+    public String showRecurringForm(@RequestParam String receiverUsername,
+                                    Model model,
+                                    @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) { // ДОБАВЕНО
+        if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
         User receiver = userRepository.findByUsername(receiverUsername)
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.User.USER_NOT_FOUND));
@@ -52,7 +55,10 @@ public class WebRecurringController {
     }
 
     @GetMapping
-    public String showMyRecurringTransactions(Model model, User currentUser) {
+    public String showMyRecurringTransactions(Model model,
+                                              @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) { // ДОБАВЕНО
+        if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
+
         model.addAttribute(MvcConstants.Attributes.RECURRING_TRANSACTIONS,
                 recurringService.getUserRecurringTransfers(currentUser));
 

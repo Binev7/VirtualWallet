@@ -8,13 +8,6 @@ public final class MvcConstants {
         public static final String REDIRECT = "redirect:";
         public static final String WALLETS = "/wallets";
         public static final String MEMBERS = "/members";
-        public static final String DELETE = "/delete";
-        public static final String ADD = "/add";
-        public static final String PROFILE = "/profile";
-        public static final String TRANSACTIONS = "/transactions";
-        public static final String ADMIN_USERS = "/admin/users";
-        public static final String ADMIN_TRANSACTIONS = "/admin/transactions";
-        public static final String ADMIN_DASHBOARD = "/admin";
     }
 
     public static String getWalletMembersRedirect(Long walletId) {
@@ -57,8 +50,8 @@ public final class MvcConstants {
         public static final String REDIRECT_ADMIN_USERS = "redirect:/admin/users";
         public static final String ADMIN_TRANSACTIONS_LIST = "admin/transactions";
         public static final String ADMIN_DASHBOARD_VIEW = "admin/dashboard";
-        public static final String REDIRECT_TRANSFER = "redirect:/transfer";
-        public static final String REDIRECT_TRANSFER_OTP = "redirect:/transfer/otp";
+        public static final String REDIRECT_TRANSFER = "redirect:/transfers";
+        public static final String REDIRECT_TRANSFER_OTP = "redirect:/transfers/otp";
     }
 
     public static final class Attributes {

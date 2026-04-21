@@ -23,7 +23,7 @@ import static com.portfolio.virtualwallet.utils.AppConstants.Pagination.DEFAULT_
 import static com.portfolio.virtualwallet.utils.AppConstants.Pagination.DEFAULT_PAGE_SIZE;
 
 @Controller
-@RequestMapping(MvcConstants.Paths.ADMIN_TRANSACTIONS)
+@RequestMapping("/admin/transactions")
 @RequiredArgsConstructor
 public class WebAdminTransactionController {
 

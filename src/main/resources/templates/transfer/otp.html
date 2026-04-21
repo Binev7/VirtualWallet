@@ -8,7 +8,7 @@
 <main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
 
     <div class="flex items-center mb-8 mt-2">
-        <a th:href="@{/transfer}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+        <a th:href="@{/transfers}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h1 class="text-xl font-bold ml-4">Security Check</h1>
@@ -30,7 +30,7 @@
         <h2 class="text-xl font-bold text-gray-800 mb-2">Enter Verification Code</h2>
         <p class="text-xs text-gray-500 mb-8 leading-relaxed">To protect your account, large transfers require verification. Please check your device for the OTP code.</p>
 
-        <form th:action="@{/transfer/otp/verify}" th:object="${otpRequest}" method="post" class="space-y-6">
+        <form th:action="@{/transfers/otp/verify}" th:object="${otpRequest}" method="post" class="space-y-6">
 
             <input type="hidden" th:field="*{transactionId}" />
 
