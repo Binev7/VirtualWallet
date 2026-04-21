@@ -8,7 +8,7 @@
 <main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
 
     <div class="flex items-center mb-8 mt-2">
-        <a th:href="@{/transfer}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+        <a th:href="@{/transfers}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
             <i class="fas fa-arrow-left"></i>
         </a>
         <h1 class="text-xl font-bold ml-4">Transfer Amount</h1>
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <form th:action="@{/transfer/process(receiverName=${receiverName})}" th:object="${transferRequest}" method="post" class="space-y-6">
+    <form th:action="@{/transfers/process(receiverName=${receiverName})}" th:object="${transferRequest}" method="post" class="space-y-6">
 
         <input type="hidden" th:field="*{receiverWalletId}" />
 
