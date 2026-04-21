@@ -7,10 +7,7 @@ import com.portfolio.virtualwallet.entity.VerificationToken;
 import com.portfolio.virtualwallet.entity.dto.auth.*;
 import com.portfolio.virtualwallet.entity.enums.Role;
 import com.portfolio.virtualwallet.entity.User;
-import com.portfolio.virtualwallet.exception.DuplicateEntityException;
-import com.portfolio.virtualwallet.exception.EntityNotFoundException;
-import com.portfolio.virtualwallet.exception.ExceptionMessages;
-import com.portfolio.virtualwallet.exception.TokenExpiredException;
+import com.portfolio.virtualwallet.exception.*;
 import com.portfolio.virtualwallet.mapper.UserMapper;
 import com.portfolio.virtualwallet.repository.PasswordResetTokenRepository;
 import com.portfolio.virtualwallet.repository.UserRepository;
@@ -80,12 +77,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponseDto login(UserLoginDto request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new EntityNotFoundException(String.format(USER_NOT_FOUND, request.getEmail())));
+
+        if (user.isBlocked()) {
+            throw new UserBlockedException(USER_BLOCKED);
+        }
+
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new EntityNotFoundException(String.format(USER_NOT_FOUND, request.getEmail())));
 
         String jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponseDto(jwtToken);

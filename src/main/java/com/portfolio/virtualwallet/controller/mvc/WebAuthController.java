@@ -5,6 +5,7 @@ import com.portfolio.virtualwallet.entity.dto.auth.ForgotPasswordDto;
 import com.portfolio.virtualwallet.entity.dto.auth.ResetPasswordDto;
 import com.portfolio.virtualwallet.entity.dto.auth.UserLoginDto;
 import com.portfolio.virtualwallet.entity.dto.auth.UserRegisterDto;
+import com.portfolio.virtualwallet.exception.UserBlockedException;
 import com.portfolio.virtualwallet.service.interfaces.AuthenticationService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +52,9 @@ public class WebAuthController {
 
             return MvcConstants.Views.REDIRECT_HOME;
 
+        } catch (UserBlockedException e) {
+            model.addAttribute(MvcConstants.Attributes.BLOCKED_ERROR, true);
+            return MvcConstants.Views.LOGIN;
         } catch (Exception e) {
             model.addAttribute(MvcConstants.Attributes.ERROR, true);
             return MvcConstants.Views.LOGIN;
