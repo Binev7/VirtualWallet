@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout/base}">
+<body class="bg-gray-100 font-sans antialiased text-gray-900">
+
+<main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
+
+    <div class="flex items-center justify-between mb-4 mt-2 sticky top-0 bg-gray-50/95 backdrop-blur z-20 py-3">
+        <div class="flex items-center">
+            <a th:href="@{/admin}" class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm text-gray-600 hover:bg-gray-100 transition">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 class="text-xl font-bold ml-4 text-gray-800">Global Transactions</h1>
+        </div>
+    </div>
+
+    <form th:action="@{/admin/transactions}" method="get" class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 mb-6 relative z-10">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-bold text-gray-800"><i class="fas fa-filter text-[#4A148C] mr-2"></i>Filters</h3>
+            <a th:if="${query != null or startDate != null or selectedType != null}" th:href="@{/admin/transactions}" class="text-[10px] font-bold text-gray-400 uppercase tracking-wider hover:text-red-500 transition">Clear All</a>
+        </div>
+
+        <div class="space-y-3">
+            <div class="relative">
+                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="text" name="username" th:value="${query}" placeholder="Search sender or receiver..."
+                       class="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#4A148C] transition">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">From</label>
+                    <input type="date" name="startDate" th:value="${startDate}" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#4A148C]">
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">To</label>
+                    <input type="date" name="endDate" th:value="${endDate}" class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#4A148C]">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <select name="type" class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#4A148C]">
+                    <option value="">All Types</option>
+                    <option value="DEPOSIT" th:selected="${selectedType != null and selectedType.name() == 'DEPOSIT'}">Deposit</option>
+                    <option value="WITHDRAW" th:selected="${selectedType != null and selectedType.name() == 'WITHDRAW'}">Withdraw</option>
+                    <option value="TRANSFER" th:selected="${selectedType != null and selectedType.name() == 'TRANSFER'}">Transfer</option>
+                </select>
+
+                <select name="status" class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#4A148C]">
+                    <option value="">All Statuses</option>
+                    <option value="SUCCESS" th:selected="${selectedStatus != null and selectedStatus.name() == 'SUCCESS'}">Success</option>
+                    <option value="FAILED" th:selected="${selectedStatus != null and selectedStatus.name() == 'FAILED'}">Failed</option>
+                    <option value="PENDING" th:selected="${selectedStatus != null and selectedStatus.name() == 'PENDING'}">Pending</option>
+                </select>
+            </div>
+
+            <button type="submit" class="w-full py-2.5 mt-2 bg-black text-white rounded-xl text-sm font-bold shadow-md hover:bg-gray-800 transition">
+                Apply Filters
+            </button>
+        </div>
+    </form>
+
+    <div class="space-y-4">
+
+        <div th:if="${transactionsPage.empty}" class="text-center py-12 bg-white rounded-3xl border border-gray-100 shadow-sm">
+            <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3 text-gray-300">
+                <i class="fas fa-receipt text-2xl"></i>
+            </div>
+            <p class="text-sm text-gray-500 font-medium">No transactions found.</p>
+        </div>
+
+        <div th:each="tx : ${transactionsPage.content}" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+
+            <div class="flex justify-between items-start mb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-gray-50 text-gray-500">
+                        <i class="fas" th:classappend="${tx.type == 'DEPOSIT' ? 'fa-arrow-up text-green-500' : (tx.type == 'WITHDRAW' ? 'fa-arrow-down text-red-500' : 'fa-exchange-alt text-blue-500')}"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-bold text-sm text-gray-800" th:text="${tx.type}">TRANSFER</p>
+                            <span th:class="${tx.status == 'SUCCESS' ? 'bg-green-100 text-green-700' : (tx.status == 'FAILED' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700')} + ' text-[8px] px-1.5 py-0.5 rounded uppercase font-bold tracking-wider'" th:text="${tx.status}">SUCCESS</span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-0.5 font-medium" th:text="${#temporals.format(tx.date, 'dd MMM yyyy, HH:mm')}">09 Apr 2026</p>
+                    </div>
+                </div>
+                <div class="font-bold text-sm tracking-tight text-gray-900" th:text="${'$' + #numbers.formatDecimal(tx.amount, 1, 'COMMA', 2, 'POINT')}">
+                    $1,500.00
+                </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-2.5 flex items-center justify-between text-xs border border-gray-100">
+                <div class="flex items-center gap-2 max-w-[45%]">
+                    <span class="text-gray-400"><i class="fas fa-upload text-[10px]"></i></span>
+                    <span class="font-semibold text-gray-700 truncate" th:text="${tx.senderUsername != null ? tx.senderUsername : 'External'}">gogo</span>
+                </div>
+                <div class="text-gray-300"><i class="fas fa-arrow-right"></i></div>
+                <div class="flex items-center gap-2 max-w-[45%] justify-end">
+                    <span class="font-semibold text-[#4A148C] truncate" th:text="${tx.receiverUsername != null ? tx.receiverUsername : 'External'}">neli</span>
+                    <span class="text-gray-400"><i class="fas fa-download text-[10px]"></i></span>
+                </div>
+            </div>
+            <div class="text-center mt-2 text-[9px] text-gray-300 font-mono tracking-widest uppercase" th:text="${'TXID: ' + tx.transactionId}">TXID: 104</div>
+        </div>
+    </div>
+
+    <div th:if="${transactionsPage.totalPages > 1}" class="mt-8 flex justify-between items-center px-1">
+        <a th:href="@{/admin/transactions(page=${transactionsPage.number - 1}, username=${query}, startDate=${startDate}, endDate=${endDate}, type=${selectedType}, status=${selectedStatus})}"
+           th:class="${transactionsPage.first ? 'pointer-events-none opacity-40' : 'hover:bg-gray-200'} + ' px-4 py-2 bg-white border border-gray-200 rounded-xl shadow-sm text-xs font-bold text-gray-600 transition'">
+            <i class="fas fa-chevron-left mr-1"></i> Prev
+        </a>
+
+        <span class="text-xs text-gray-400 font-medium">
+            <span class="text-gray-800 font-bold" th:text="${transactionsPage.number + 1}">1</span> / <span th:text="${transactionsPage.totalPages}">5</span>
+        </span>
+
+        <a th:href="@{/admin/transactions(page=${transactionsPage.number + 1}, username=${query}, startDate=${startDate}, endDate=${endDate}, type=${selectedType}, status=${selectedStatus})}"
+           th:class="${transactionsPage.last ? 'pointer-events-none opacity-40' : 'hover:bg-gray-200'} + ' px-4 py-2 bg-white border border-gray-200 rounded-xl shadow-sm text-xs font-bold text-gray-600 transition'">
+            Next <i class="fas fa-chevron-right ml-1"></i>
+        </a>
+    </div>
+
+</main>
+</body>
+</html>
