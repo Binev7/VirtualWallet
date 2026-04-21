@@ -52,6 +52,7 @@ public final class MvcConstants {
         public static final String ADMIN_DASHBOARD_VIEW = "admin/dashboard";
         public static final String REDIRECT_TRANSFER = "redirect:/transfers";
         public static final String REDIRECT_TRANSFER_OTP = "redirect:/transfers/otp";
+        public static final String LANDING_PAGE = "home/landing";
     }
 
     public static final class Attributes {

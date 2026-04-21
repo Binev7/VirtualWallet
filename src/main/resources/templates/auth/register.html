@@ -10,7 +10,10 @@
 </head>
 <body class="bg-gray-100 font-sans antialiased text-gray-900 flex items-center justify-center min-h-screen">
 <main class="w-full max-w-md bg-white min-h-screen p-8 shadow-xl flex flex-col justify-center relative">
-    <a th:href="@{/login}" class="absolute top-6 left-6 text-gray-400 hover:text-gray-800"><i class="fas fa-arrow-left text-xl"></i></a>
+
+    <a th:href="@{/}" class="absolute top-6 left-6 text-gray-400 hover:text-gray-800">
+        <i class="fas fa-arrow-left text-xl"></i>
+    </a>
 
     <div class="text-center mb-8 mt-8">
         <h1 class="text-3xl font-bold text-gray-800">Create Account</h1>
@@ -46,7 +49,9 @@
 
     <p class="mt-8 text-center text-sm text-gray-600">
         Already have an account?
-        <a th:href="@{/login}" class="font-medium text-primary hover:text-secondary">Log in</a>
+        <a th:href="@{/login}" class="text-primary font-bold hover:underline ml-1">
+            Log in
+        </a>
     </p>
 </main>
 </body>

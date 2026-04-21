@@ -32,7 +32,7 @@ public class HomeController {
             @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
 
         if (currentUser == null) {
-            return MvcConstants.Views.REDIRECT_LOGIN;
+            return MvcConstants.Views.LANDING_PAGE;
         }
 
         List<WalletResponseDto> wallets = walletService.getMyWallets();
