@@ -109,6 +109,14 @@ public final class AppConstants {
     }
 
     @UtilityClass
+    public class Role {
+        public static final String ADMIN = "ADMIN";
+        public static final String USER = "USER";
+        public static final String ROLE_ADMIN = "ROLE_ADMIN";
+        public static final String ROLE_USER = "ROLE_USER";
+    }
+
+    @UtilityClass
     public static final class TransactionDirection {
         public static final String INCOMING_DIRECTION = "INCOME";
         public static final String OUTGOING_DIRECTION = "OUTCOME";

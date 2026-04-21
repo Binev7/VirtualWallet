@@ -1,4 +1,4 @@
-package com.portfolio.virtualwallet.controller;
+package com.portfolio.virtualwallet.controller.rest;
 
 import com.portfolio.virtualwallet.entity.User;
 import com.portfolio.virtualwallet.entity.dto.user.ChangeEmailDto;

@@ -13,6 +13,8 @@ public class ExceptionMessages {
         public static final String USER_NOT_FOUND = "User not found.";
         public static final String INCORRECT_CURRENT_PASSWORD = "The current password you entered is incorrect.";
         public static final String PASSWORDS_DO_NOT_MATCH = "New passwords do not match.";
+        public static final String USER_BLOCKED = "User account is blocked by an administrator.";
+        public static final String ADMIN_PROTECTION = "Administrators cannot be blocked or unblocked!";
     }
 
     @UtilityClass

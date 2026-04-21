@@ -1,4 +1,4 @@
-package com.portfolio.virtualwallet.controller;
+package com.portfolio.virtualwallet.controller.rest;
 
 import com.portfolio.virtualwallet.entity.dto.auth.*;
 import com.portfolio.virtualwallet.service.interfaces.AuthenticationService;
