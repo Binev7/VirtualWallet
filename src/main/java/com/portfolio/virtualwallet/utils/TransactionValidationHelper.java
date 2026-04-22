@@ -7,6 +7,7 @@ import com.portfolio.virtualwallet.exception.EntityNotFoundException;
 import com.portfolio.virtualwallet.exception.ExceptionMessages;
 import com.portfolio.virtualwallet.exception.UnauthorizedException;
 import com.portfolio.virtualwallet.repository.CardRepository;
+import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ public class TransactionValidationHelper {
 
     private final WalletRepository walletRepository;
     private final CardRepository cardRepository;
+    private final UserRepository userRepository;
 
     public Wallet getWalletById(Long walletId) {
         return walletRepository.findById(walletId)
@@ -43,11 +45,15 @@ public class TransactionValidationHelper {
         return wallet;
     }
 
-    public void verifyUserCanMakeTransactions(User user) {
-        if (user.isBlocked()) {
+    public void verifyUserCanMakeTransactions(User currentUser) {
+        User freshUser = userRepository.findById(currentUser.getId())
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionMessages.User.USER_NOT_FOUND));
+
+        if (freshUser.isBlocked()) {
             throw new IllegalArgumentException(USER_IS_BLOCKED);
         }
-        if (!user.isEmailVerified()) {
+
+        if (!freshUser.isEmailVerified()) {
             throw new UnauthorizedException(ExceptionMessages.Verification.UNVERIFIED_EMAIL_ACTION);
         }
     }
