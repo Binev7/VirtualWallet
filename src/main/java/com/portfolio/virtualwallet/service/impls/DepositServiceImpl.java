@@ -31,6 +31,10 @@ public class DepositServiceImpl implements DepositService {
     @Override
     @Transactional
     public TransactionResponseDto depositToWallet(User currentUser, DepositRequestDto request) {
+        System.out.println("DEBUG User ID: " + (currentUser != null ? currentUser.getId() : "User is NULL"));
+        System.out.println("DEBUG Wallet ID: " + request.getWalletId());
+        System.out.println("DEBUG Card ID: " + request.getCardId());
+
         validationHelper.verifyUserCanMakeTransactions(currentUser);
         Wallet targetWallet = validationHelper.getWalletIfOwner(request.getWalletId());
         Card sourceCard = validationHelper.getCardIfOwner(request.getCardId());

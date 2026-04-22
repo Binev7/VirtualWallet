@@ -14,6 +14,7 @@ import com.portfolio.virtualwallet.service.interfaces.WalletService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,7 +36,7 @@ public class WebRecurringController {
     @GetMapping("/new")
     public String showRecurringForm(@RequestParam String receiverUsername,
                                     Model model,
-                                    @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) { // ДОБАВЕНО
+                                    @AuthenticationPrincipal User currentUser) {
         if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
         User receiver = userRepository.findByUsername(receiverUsername)
@@ -56,7 +57,7 @@ public class WebRecurringController {
 
     @GetMapping
     public String showMyRecurringTransactions(Model model,
-                                              @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) { // ДОБАВЕНО
+                                              @AuthenticationPrincipal User currentUser) {
         if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
         model.addAttribute(MvcConstants.Attributes.RECURRING_TRANSACTIONS,
@@ -69,7 +70,7 @@ public class WebRecurringController {
     public String showRecurringSearch(
             @RequestParam(required = false) String query,
             Model model,
-            @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+            @AuthenticationPrincipal User currentUser) {
 
         if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
@@ -95,7 +96,7 @@ public class WebRecurringController {
             BindingResult bindingResult,
             Model model,
             RedirectAttributes redirectAttributes,
-            @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+            @AuthenticationPrincipal User currentUser) {
 
         if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
@@ -115,7 +116,7 @@ public class WebRecurringController {
     public String cancelRecurring(
             @PathVariable Long id,
             RedirectAttributes redirectAttributes,
-            @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+            @AuthenticationPrincipal User currentUser) {
 
         if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
