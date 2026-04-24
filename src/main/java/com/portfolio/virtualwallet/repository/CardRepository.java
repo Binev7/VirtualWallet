@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface CardRepository extends JpaRepository<Card, Long> {
 
-    boolean existsByCardNumber(String cardNumber);
+    boolean existsByStripePaymentMethodId(String stripePaymentMethodId);
 
     List<Card> findByUserUsername(String username);
 
