@@ -15,6 +15,7 @@ import com.portfolio.virtualwallet.service.interfaces.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class WebTransferController {
     @GetMapping
     public String showSearchPage(@RequestParam(required = false) String query,
                                  Model model,
-                                 @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+                                 @AuthenticationPrincipal User currentUser) {
         if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
         if (query != null && !query.isBlank()) {
@@ -55,7 +56,7 @@ public class WebTransferController {
     @GetMapping("/new")
     public String showTransferForm(@RequestParam String receiverUsername,
                                    Model model,
-                                   @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+                                   @AuthenticationPrincipal User currentUser) {
         if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
         User receiver = userRepository.findByUsername(receiverUsername)
@@ -80,7 +81,7 @@ public class WebTransferController {
             @RequestParam String receiverName,
             RedirectAttributes redirectAttributes,
             Model model,
-            @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+            @AuthenticationPrincipal User currentUser) {
 
         if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
@@ -106,7 +107,7 @@ public class WebTransferController {
 
     @GetMapping("/otp")
     public String showOtpPage(Model model,
-                              @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+                              @AuthenticationPrincipal User currentUser) {
         if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
         if (!model.containsAttribute(MvcConstants.Attributes.TRANSACTION_ID)) {
@@ -127,7 +128,7 @@ public class WebTransferController {
             @ModelAttribute(MvcConstants.Attributes.OTP_REQUEST) OtpVerificationRequestDto request,
             RedirectAttributes redirectAttributes,
             Model model,
-            @ModelAttribute(MvcConstants.Attributes.CURRENT_USER) User currentUser) {
+            @AuthenticationPrincipal User currentUser) {
 
         if (currentUser == null) return MvcConstants.Views.REDIRECT_LOGIN;
 
