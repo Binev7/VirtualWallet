@@ -1,15 +1,11 @@
 package com.portfolio.virtualwallet.entity.dto.card;
 
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessages.Card.*;
 
@@ -19,9 +15,8 @@ import static com.portfolio.virtualwallet.entity.dto.constants.ValidationMessage
 @NoArgsConstructor
 public class CardUpdateDto {
 
-    @NotNull(message = EXPIRATION_DATE_NOT_NULL)
-    @Future(message = EXPIRATION_DATE_FUTURE)
-    private LocalDate expirationDate;
+    @NotBlank(message = EXPIRATION_DATE_NOT_NULL)
+    private String expirationDate;
 
     @NotBlank(message = CARD_HOLDER_NOT_BLANK)
     @Size(min = 2, max = 30, message = CARD_HOLDER_SIZE)
