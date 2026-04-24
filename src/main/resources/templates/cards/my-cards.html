@@ -29,11 +29,13 @@
 
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center border border-gray-100">
-                    <i class="fab fa-cc-visa text-2xl text-[#4A148C]"></i>
+                    <i th:class="${c.brand == 'visa' ? 'fab fa-cc-visa' : (c.brand == 'mastercard' ? 'fab fa-cc-mastercard' : 'fas fa-credit-card')} + ' text-2xl text-[#4A148C]'"></i>
                 </div>
                 <div>
                     <p class="font-bold text-gray-800 text-sm uppercase" th:text="${c.cardHolder}">JOHN DOE</p>
-                    <p class="text-xs text-gray-500 font-mono tracking-widest mt-1">**** **** **** <span th:text="${c.maskedCardNumber}">1234</span></p>
+                    <p class="text-xs text-gray-500 font-mono tracking-widest mt-1">
+                        **** **** **** <span th:text="${c.last4}">4242</span>
+                    </p>
                 </div>
             </div>
 
@@ -54,7 +56,6 @@
     <a th:href="@{/cards/add}" class="w-full bg-[#4A148C] text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 relative overflow-hidden">
         <i class="fas fa-plus"></i>
         <span>Add New Card</span>
-        <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-[#7B1FA2] to-[#4A148C] opacity-0 hover:opacity-100 transition-opacity duration-300 -z-10"></div>
     </a>
 
 </main>

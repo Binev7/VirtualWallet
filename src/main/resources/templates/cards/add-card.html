@@ -3,6 +3,9 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragments/layout/base}">
+<head>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
 <body class="bg-gray-100 font-sans antialiased text-gray-900">
 
 <main layout:fragment="content" class="max-w-md mx-auto bg-gray-50 min-h-screen p-4 shadow-xl pb-24">
@@ -24,43 +27,96 @@
             <i class="fab fa-cc-visa text-4xl opacity-80"></i>
         </div>
         <div>
-            <p class="text-sm tracking-widest opacity-80 mb-1">Card Number</p>
-            <p class="text-xl tracking-widest font-mono">**** **** **** ****</p>
+            <p class="text-sm tracking-widest opacity-80 mb-1">Secure Card</p>
+            <p class="text-xl tracking-widest font-mono">Protected by Stripe</p>
         </div>
     </div>
 
-    <form th:action="@{/cards/add}" th:object="${card}" method="post" class="space-y-5 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+    <form id="payment-form" th:action="@{/cards/add}" th:object="${card}" method="post" class="space-y-5 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
 
         <div>
             <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Card Holder Name</label>
-            <input type="text" th:field="*{cardHolder}" required placeholder="John Doe"
+            <input type="text" id="cardHolder" th:field="*{cardHolder}" required placeholder="John Doe"
                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#4A148C] focus:border-transparent transition bg-gray-50">
         </div>
 
         <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Card Number</label>
-            <input type="text" th:field="*{cardNumber}" required placeholder="0000 0000 0000 0000"
-                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#4A148C] focus:border-transparent transition bg-gray-50 font-mono">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Card Details</label>
+            <div id="card-element" class="w-full px-4 py-3 rounded-xl border border-gray-200 transition bg-gray-50" style="min-height: 48px; padding-top: 14px;">
+            </div>
+
+            <div id="card-errors" class="text-red-500 text-xs font-bold mt-2 hidden"></div>
         </div>
 
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Expiry Date</label>
-                <input type="date" th:field="*{expirationDate}" required
-                       class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#4A148C] focus:border-transparent transition bg-gray-50">
-            </div>
-            <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">CVV</label>
-                <input type="password" th:field="*{checkNumber}" maxlength="3" required placeholder="***"
-                       class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#4A148C] focus:border-transparent transition bg-gray-50 text-center font-mono tracking-widest">
-            </div>
-        </div>
+        <input type="hidden" id="stripePaymentMethodId" th:field="*{stripePaymentMethodId}">
 
-        <button type="submit" class="w-full mt-6 bg-[#4A148C] text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all">
-            Save Card
+        <button type="submit" id="submit-button" class="w-full mt-6 bg-[#4A148C] text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all">
+            Save Securely
         </button>
     </form>
 
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function() {
+            var stripePublicKey = /*[[${stripePublicKey}]]*/ 'pk_test_...';
+            var stripe = Stripe(stripePublicKey);
+            var elements = stripe.elements();
+
+            var style = {
+                base: {
+                    color: '#111827',
+                    fontFamily: '"Inter", ui-sans-serif, system-ui, sans-serif',
+                    fontSmoothing: 'antialiased',
+                    fontSize: '16px',
+                    '::placeholder': {
+                        color: '#9CA3AF'
+                    }
+                },
+                invalid: {
+                    color: '#EF4444',
+                    iconColor: '#EF4444'
+                }
+            };
+
+            var cardElement = elements.create('card', {
+                style: style,
+                hidePostalCode: true
+            });
+            cardElement.mount('#card-element');
+
+            var form = document.getElementById('payment-form');
+            var submitButton = document.getElementById('submit-button');
+            var errorElement = document.getElementById('card-errors');
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                errorElement.classList.add('hidden');
+
+                var cardHolderName = document.getElementById('cardHolder').value;
+
+                stripe.createPaymentMethod({
+                    type: 'card',
+                    card: cardElement,
+                    billing_details: {
+                        name: cardHolderName
+                    }
+                }).then(function(result) {
+                    if (result.error) {
+                        errorElement.textContent = result.error.message;
+                        errorElement.classList.remove('hidden');
+
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = 'Save Securely';
+                    } else {
+                        document.getElementById('stripePaymentMethodId').value = result.paymentMethod.id;
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
 </main>
 </body>
 </html>
