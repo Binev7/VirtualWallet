@@ -49,17 +49,19 @@
                     <div class="flex justify-between items-center w-full">
 
                         <div class="relative">
-                            <select class="card-selector appearance-none bg-transparent text-sm tracking-widest font-medium text-white focus:outline-none cursor-pointer pr-6">
+                            <select class="card-selector appearance-none bg-transparent text-sm tracking-widest font-medium text-white focus:outline-none cursor-pointer pr-6 uppercase">
                                 <option th:each="c : ${cards}"
                                         th:value="${c.id}"
-                                        th:text="'**** **** ' + ${c.maskedCardNumber}"
+                                        th:text="${c.brand + ' •••• ' + c.last4}"
                                         class="text-gray-900 text-sm py-2">
                                 </option>
                             </select>
                             <i class="fas fa-chevron-down absolute right-1 top-1/2 transform -translate-y-1/2 text-[10px] opacity-70 pointer-events-none"></i>
                         </div>
 
-                        <div class="font-bold text-xl italic">VISA</div>
+                        <div class="font-bold text-xl italic">
+                            <i th:class="${cards[0].brand == 'visa' ? 'fab fa-cc-visa' : (cards[0].brand == 'mastercard' ? 'fab fa-cc-mastercard' : 'fas fa-credit-card')}"></i>
+                        </div>
                     </div>
                 </div>
 
