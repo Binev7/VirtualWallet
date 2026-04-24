@@ -6,6 +6,7 @@ import com.portfolio.virtualwallet.entity.dto.card.CardResponseDto;
 import com.portfolio.virtualwallet.entity.dto.card.CardUpdateDto;
 import com.portfolio.virtualwallet.service.interfaces.CardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,9 @@ public class WebCardController {
 
     private final CardService cardService;
 
+    @Value("${stripe.api.public-key}")
+    private String stripePublicKey;
+
     @GetMapping
     public String showMyCards(Model model) {
         model.addAttribute(MvcConstants.Attributes.CARDS, cardService.getAllMyCards());
@@ -27,6 +31,8 @@ public class WebCardController {
     @GetMapping("/add")
     public String showAddCardPage(Model model) {
         model.addAttribute(MvcConstants.Attributes.CARD, new CardCreateDto());
+        model.addAttribute(MvcConstants.Attributes.STRIPE_PUBLIC_KEY, stripePublicKey);
+
         return MvcConstants.Views.ADD_CARD;
     }
 
@@ -46,6 +52,7 @@ public class WebCardController {
             return MvcConstants.Views.REDIRECT_MY_CARDS;
         } catch (Exception e) {
             model.addAttribute(MvcConstants.Attributes.ERROR, e.getMessage());
+            model.addAttribute(MvcConstants.Attributes.STRIPE_PUBLIC_KEY, stripePublicKey);
             return MvcConstants.Views.ADD_CARD;
         }
     }
@@ -54,7 +61,7 @@ public class WebCardController {
     public String showEditCardPage(@PathVariable Long id, Model model) {
         CardResponseDto card = cardService.getCardById(id);
 
-        model.addAttribute("cardId", id);
+        model.addAttribute(MvcConstants.Attributes.CARD_ID, id);
         model.addAttribute(MvcConstants.Attributes.CARD, card);
         return MvcConstants.Views.EDIT_CARD;
     }
@@ -76,7 +83,7 @@ public class WebCardController {
             return MvcConstants.Views.REDIRECT_MY_CARDS;
         } catch (Exception e) {
             model.addAttribute(MvcConstants.Attributes.ERROR, e.getMessage());
-            model.addAttribute("cardId", id);
+            model.addAttribute(MvcConstants.Attributes.CARD_ID, id);
             return MvcConstants.Views.EDIT_CARD;
         }
     }

@@ -95,6 +95,8 @@ public final class MvcConstants {
         public static final String SELECTED_TYPE = "selectedType";
         public static final String SELECTED_STATUS = "selectedStatus";
         public static final String BLOCKED_ERROR = "blockedError";
+        public static final String STRIPE_PUBLIC_KEY = "stripePublicKey";
+        public static final String CARD_ID = "cardId";
     }
 
     public static final class Messages {
