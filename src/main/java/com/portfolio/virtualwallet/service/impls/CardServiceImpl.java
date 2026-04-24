@@ -8,6 +8,7 @@ import com.portfolio.virtualwallet.entity.dto.card.CardUpdateDto;
 import com.portfolio.virtualwallet.exception.DuplicateEntityException;
 import com.portfolio.virtualwallet.exception.EntityNotFoundException;
 import com.portfolio.virtualwallet.exception.ExceptionMessages;
+import com.portfolio.virtualwallet.exception.StripePaymentException;
 import com.portfolio.virtualwallet.mapper.CardMapper;
 import com.portfolio.virtualwallet.repository.CardRepository;
 import com.portfolio.virtualwallet.repository.UserRepository;
@@ -38,12 +39,27 @@ public class CardServiceImpl implements CardService {
         User user = userRepository.findByUsername(currentUsername)
                 .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND));
 
-        if (cardRepository.existsByCardNumber(request.getCardNumber())) {
+        if (cardRepository.existsByStripePaymentMethodId(request.getStripePaymentMethodId())) {
             throw new DuplicateEntityException(CARD_ALREADY_EXISTS);
         }
 
         Card card = cardMapper.toEntity(request);
         card.setUser(user);
+
+        try {
+            com.stripe.model.PaymentMethod stripeMethod =
+                    com.stripe.model.PaymentMethod.retrieve(request.getStripePaymentMethodId());
+
+            card.setBrand(stripeMethod.getCard().getBrand());
+            card.setLast4(stripeMethod.getCard().getLast4());
+
+            String expMonth = String.format("%02d", stripeMethod.getCard().getExpMonth());
+            String expYear = String.valueOf(stripeMethod.getCard().getExpYear()).substring(2);
+            card.setExpirationDate(expMonth + "/" + expYear);
+
+        } catch (com.stripe.exception.StripeException e) {
+            throw new StripePaymentException(STRIPE_PAYMENT_ERROR);
+        }
 
         Card savedCard = cardRepository.save(card);
 

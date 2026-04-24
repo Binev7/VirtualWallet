@@ -31,15 +31,11 @@ public class DepositServiceImpl implements DepositService {
     @Override
     @Transactional
     public TransactionResponseDto depositToWallet(User currentUser, DepositRequestDto request) {
-        System.out.println("DEBUG User ID: " + (currentUser != null ? currentUser.getId() : "User is NULL"));
-        System.out.println("DEBUG Wallet ID: " + request.getWalletId());
-        System.out.println("DEBUG Card ID: " + request.getCardId());
-
         validationHelper.verifyUserCanMakeTransactions(currentUser);
         Wallet targetWallet = validationHelper.getWalletIfOwner(request.getWalletId());
         Card sourceCard = validationHelper.getCardIfOwner(request.getCardId());
 
-        BankApiResponse bankResponse = bankingClient.processDeposit(sourceCard, request.getCvv(), request.getAmount());
+        BankApiResponse bankResponse = bankingClient.processDeposit(sourceCard, request.getAmount());
 
         if (!bankResponse.isSuccess()) {
             throw new IllegalArgumentException(BANK_REJECTED_TRANSACTION);
