@@ -36,6 +36,7 @@ public class ValidationMessages {
         public static final String CHECK_NUMBER_PATTERN = "Check number must be exactly 3 digits.";
         public static final String CVV_NOT_BLANK = "CVV code is required.";
         public static final String CVV_PATTERN = "CVV must be exactly 3 digits.";
+        public static final String STRIPE_PAYMENT_METHOD = "Stripe Payment Method ID is required";
     }
 
     @UtilityClass

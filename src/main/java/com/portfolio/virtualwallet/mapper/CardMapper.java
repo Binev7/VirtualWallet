@@ -10,29 +10,19 @@ public class CardMapper {
 
     public Card toEntity(CardCreateDto dto) {
         Card card = new Card();
-        card.setCardNumber(dto.getCardNumber());
-        card.setExpirationDate(dto.getExpirationDate());
         card.setCardHolder(dto.getCardHolder());
-        card.setCheckNumber(dto.getCheckNumber());
-
+        card.setStripePaymentMethodId(dto.getStripePaymentMethodId());
         return card;
     }
 
     public CardResponseDto toDto(Card entity) {
         CardResponseDto dto = new CardResponseDto();
         dto.setId(entity.getId());
-        dto.setExpirationDate(entity.getExpirationDate());
         dto.setCardHolder(entity.getCardHolder());
-
-        dto.setMaskedCardNumber(maskCardNumber(entity.getCardNumber()));
+        dto.setBrand(entity.getBrand());
+        dto.setLast4(entity.getLast4());
+        dto.setExpirationDate(entity.getExpirationDate());
 
         return dto;
-    }
-
-    private String maskCardNumber(String cardNumber) {
-        if (cardNumber == null || cardNumber.length() != 16) {
-            return cardNumber;
-        }
-        return "**** **** **** " + cardNumber.substring(12);
     }
 }

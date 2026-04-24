@@ -3,34 +3,35 @@ package com.portfolio.virtualwallet.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "cards")
-@Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Card {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 16)
-    private String cardNumber;
-
-    @Column(nullable = false)
-    private LocalDate expirationDate;
-
-    @Column(nullable = false, length = 30)
+    @Column(name = "card_holder", nullable = false)
     private String cardHolder;
 
-    @Column(nullable = false, length = 3)
-    private String checkNumber;
+    @Column(name = "stripe_payment_method_id", unique = true)
+    private String stripePaymentMethodId;
+
+    @Column(name = "last4", length = 4)
+    private String last4;
+
+    @Column(name = "brand")
+    private String brand;
+
+    @Column(name = "expiration_date", nullable = false)
+    private String expirationDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 }

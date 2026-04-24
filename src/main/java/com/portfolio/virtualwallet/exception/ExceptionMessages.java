@@ -22,6 +22,7 @@ public class ExceptionMessages {
         public static final String CARD_ALREADY_EXISTS = "Card with this number already exists.";
         public static final String CARD_NOT_FOUND = "Card not found.";
         public static final String CARD_NOT_OWNER = "You do not have permission to use this card.";
+        public static final String STRIPE_PAYMENT_ERROR = "Invalid Stripe Payment Method.";
     }
 
     @UtilityClass
