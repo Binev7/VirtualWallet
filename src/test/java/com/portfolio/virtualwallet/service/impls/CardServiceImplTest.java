@@ -11,6 +11,7 @@ import com.portfolio.virtualwallet.mapper.CardMapper;
 import com.portfolio.virtualwallet.repository.CardRepository;
 import com.portfolio.virtualwallet.repository.UserRepository;
 import com.portfolio.virtualwallet.utils.SecurityUtils;
+import com.stripe.model.PaymentMethod;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +23,6 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,30 +57,49 @@ class CardServiceImplTest {
     @Nested
     @DisplayName("Add Card Tests")
     class AddCardTests {
+
         @Test
         void addCard_ShouldSucceed_WhenValidRequest() {
-            CardCreateDto request = CardCreateDto.builder().cardNumber("1234567890123456").build();
+            CardCreateDto request = CardCreateDto.builder().stripePaymentMethodId("pm_123456").build();
             User user = User.builder().username(TEST_USER).build();
-            Card card = Card.builder().cardNumber(request.getCardNumber()).build();
+            Card card = Card.builder().stripePaymentMethodId(request.getStripePaymentMethodId()).build();
 
             when(userRepository.findByUsername(TEST_USER)).thenReturn(Optional.of(user));
-            when(cardRepository.existsByCardNumber(request.getCardNumber())).thenReturn(false);
+            when(cardRepository.existsByStripePaymentMethodId(request.getStripePaymentMethodId())).thenReturn(false);
             when(cardMapper.toEntity(request)).thenReturn(card);
             when(cardRepository.save(any(Card.class))).thenReturn(card);
             when(cardMapper.toDto(any(Card.class))).thenReturn(new CardResponseDto());
 
-            CardResponseDto result = cardService.addCard(request);
+            PaymentMethod mockMethod = mock(PaymentMethod.class);
+            PaymentMethod.Card mockStripeCard = mock(PaymentMethod.Card.class);
 
-            assertNotNull(result);
-            verify(cardRepository).save(card);
-            assertEquals(user, card.getUser());
+            when(mockMethod.getCard()).thenReturn(mockStripeCard);
+            when(mockStripeCard.getBrand()).thenReturn("visa");
+            when(mockStripeCard.getLast4()).thenReturn("4242");
+            when(mockStripeCard.getExpMonth()).thenReturn(12L);
+            when(mockStripeCard.getExpYear()).thenReturn(2025L);
+
+            try (MockedStatic<PaymentMethod> mockedStripe = mockStatic(PaymentMethod.class)) {
+                mockedStripe.when(() -> PaymentMethod.retrieve("pm_123456")).thenReturn(mockMethod);
+
+                CardResponseDto result = cardService.addCard(request);
+
+                assertNotNull(result);
+                verify(cardRepository).save(card);
+                assertEquals(user, card.getUser());
+
+                assertEquals("visa", card.getBrand());
+                assertEquals("4242", card.getLast4());
+                assertEquals("12/25", card.getExpirationDate());
+            }
         }
 
         @Test
-        void addCard_ShouldThrow_WhenCardNumberExists() {
-            CardCreateDto request = CardCreateDto.builder().cardNumber("1111").build();
+        void addCard_ShouldThrow_WhenStripeIdExists() {
+            // ПРОМЯНА: Проверяваме по Stripe ID
+            CardCreateDto request = CardCreateDto.builder().stripePaymentMethodId("pm_1111").build();
             when(userRepository.findByUsername(TEST_USER)).thenReturn(Optional.of(new User()));
-            when(cardRepository.existsByCardNumber("1111")).thenReturn(true);
+            when(cardRepository.existsByStripePaymentMethodId("pm_1111")).thenReturn(true);
 
             assertThrows(DuplicateEntityException.class, () -> cardService.addCard(request));
         }
@@ -105,7 +124,7 @@ class CardServiceImplTest {
             Long cardId = 1L;
             CardUpdateDto request = CardUpdateDto.builder()
                     .cardHolder("New Holder")
-                    .expirationDate(LocalDate.of(2029, 12, 1))
+                    .expirationDate("12/29")
                     .build();
 
             Card existingCard = Card.builder().id(cardId).build();
@@ -117,6 +136,7 @@ class CardServiceImplTest {
             cardService.updateCard(cardId, request);
 
             assertEquals("New Holder", existingCard.getCardHolder());
+            assertEquals("12/29", existingCard.getExpirationDate());
             verify(cardRepository).save(existingCard);
         }
 

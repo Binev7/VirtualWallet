@@ -52,7 +52,6 @@ class DepositServiceImplTest {
         requestDto = DepositRequestDto.builder()
                 .walletId(1L)
                 .cardId(1L)
-                .cvv("123")
                 .amount(new BigDecimal("50.00"))
                 .build();
     }
@@ -68,7 +67,8 @@ class DepositServiceImplTest {
 
         when(validationHelper.getWalletIfOwner(1L)).thenReturn(wallet);
         when(validationHelper.getCardIfOwner(1L)).thenReturn(card);
-        when(bankingClient.processDeposit(eq(card), eq("123"), any(BigDecimal.class))).thenReturn(bankResponse);
+        when(bankingClient.processDeposit(eq(card), any(BigDecimal.class))).thenReturn(bankResponse);
+
         when(transactionMapper.createDepositEntity(any(), any(), any())).thenReturn(transaction);
         when(transactionMapper.toResponseDto(any(), any())).thenReturn(TransactionResponseDto.builder().build());
 
@@ -89,7 +89,7 @@ class DepositServiceImplTest {
 
         when(validationHelper.getWalletIfOwner(1L)).thenReturn(wallet);
         when(validationHelper.getCardIfOwner(1L)).thenReturn(card);
-        when(bankingClient.processDeposit(any(), any(), any())).thenReturn(bankResponse);
+        when(bankingClient.processDeposit(any(), any())).thenReturn(bankResponse);
 
         assertThrows(IllegalArgumentException.class, () -> depositService.depositToWallet(user, requestDto));
         verify(transactionRepository, never()).save(any());
