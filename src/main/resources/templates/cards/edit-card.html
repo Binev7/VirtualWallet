@@ -21,9 +21,12 @@
         <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 mb-6 flex justify-between items-center">
             <div>
                 <p class="text-[10px] text-gray-500 uppercase tracking-wide font-bold mb-1">Card Number (Uneditable)</p>
-                <p class="font-mono text-gray-700 tracking-widest">**** **** **** <span th:text="${card.maskedCardNumber != null ? card.maskedCardNumber : 'XXXX'}"></span></p>
+                <p class="font-mono text-gray-700 tracking-widest">
+                    **** **** **** <span th:text="${card.last4}">4242</span>
+                </p>
+                <p class="text-[10px] text-[#4A148C] font-bold uppercase" th:text="${card.brand}">visa</p>
             </div>
-            <i class="fab fa-cc-visa text-3xl text-gray-300"></i>
+            <i th:class="${card.brand == 'visa' ? 'fab fa-cc-visa' : (card.brand == 'mastercard' ? 'fab fa-cc-mastercard' : 'fas fa-credit-card')} + ' text-3xl text-gray-400'"></i>
         </div>
 
         <div>
@@ -33,9 +36,9 @@
         </div>
 
         <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Expiry Date</label>
-            <input type="date" th:field="*{expirationDate}" required
-                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#4A148C] focus:border-transparent transition bg-gray-50">
+            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Expiry Date (MM/YY)</label>
+            <input type="text" th:field="*{expirationDate}" required placeholder="MM/YY" maxlength="5"
+                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#4A148C] focus:border-transparent transition bg-gray-50 font-mono">
         </div>
 
         <button type="submit" class="w-full mt-6 bg-[#4A148C] text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all">
